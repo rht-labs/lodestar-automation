@@ -1,0 +1,28 @@
+---
+- name: Translate engagement data into Argo-processable resources
+  hosts: local
+  gather_facts: false
+  tasks:
+  - name: Read Engagement Data
+    include_vars:
+      file: "{{ directory }}/engagement.json"
+  - name: Create OCP Chart directory if not exists
+    file:
+     path: "{{ directory }}/ocp-init"
+     state: directory
+  - name: Write OCP Chart
+    template:
+      src: "{{ item }}"
+      dest: "{{ directory }}/ocp-init/{{ item | basename | regex_replace('\\.j2$', '.yaml') }}"
+    with_fileglob:
+      - ocp-init/*.j2
+  - name: Create OCP Templates directory if not exists
+    file:
+     path: "{{ directory }}/ocp-init/templates"
+     state: directory
+  - name: Write OCP Templates
+    template:
+      src: "{{ item }}"
+      dest: "{{ directory }}/ocp-init/templates/{{ item | basename | regex_replace('\\.j2$', '.yaml') }}"
+    with_fileglob:
+      - ocp-init/templates/*.j2

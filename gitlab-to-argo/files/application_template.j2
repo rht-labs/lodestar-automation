@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "{{ resource_prefix }}-{{ item.id }}"
+  labels:
+    created-by: "{{ created_by }}"
+spec:
+  destination:
+    namespace: "{{ destination_namespace }}"
+    server: 'https://kubernetes.default.svc'
+  source:
+    path: "{{ chart_path }}"
+    repoURL: >-
+      {{ item.ssh_url_to_repo }}
+    targetRevision: "{{ target_revision }}"
+  project: default

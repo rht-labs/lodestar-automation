@@ -1,0 +1,20 @@
+---
+- name: Generate Argo apps from GitLab projects
+  hosts: local
+  gather_facts: false
+  tasks:
+  - name: Fetch GitLab Projects
+    uri:
+      url: "{{ gitlab_base_url }}/api/v4/groups/{{ gitlab_group }}/projects?include_subgroups=true"
+      headers:
+        Private-Token: "{{ gitlab_private_token }}"
+    register: gitlab_groups
+  - name: Create output directory if not exists
+    file:
+     path: output
+     state: directory
+  - name: Write Application Definitions
+    template:
+      src: files/application_template.j2
+      dest: "output/{{ item.id }}.yml"
+    loop: "{{ gitlab_groups.json }}"
