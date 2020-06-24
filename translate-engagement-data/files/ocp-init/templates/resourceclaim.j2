@@ -13,11 +13,11 @@ spec:
       metadata:
         annotations:
           poolboy.gpte.redhat.com/resource-provider-name: babylon
-        generateName: innolabs.ocp4.{{ .Values.ocp.cluster_size }}-
+        generateName: labs.ocp4.na-
         labels:
-          governor:  innolabs.ocp4.{{ .Values.ocp.cluster_size }}
+          governor:  labs.ocp4.na
       spec:
-        governor: innolabs.ocp4.{{ .Values.ocp.cluster_size }}
+        governor: labs.ocp4.na
         vars:
           job_vars:
             aws_region: {{ .Values.ocp.cloud_region }}
