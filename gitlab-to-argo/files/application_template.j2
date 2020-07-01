@@ -14,3 +14,9 @@ spec:
       {{ item.ssh_url_to_repo }}
     targetRevision: "{{ target_revision }}"
   project: default
+{% if syncPolicy is defined and syncPolicy | bool %}
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+{% endif %}
