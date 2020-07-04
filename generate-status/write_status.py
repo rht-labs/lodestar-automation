@@ -30,10 +30,10 @@ ocp_subsystem["info"] = "Working as expected" if current_state == desired_state 
 ocp_subsystem["updated"] = str(datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc, microsecond=0).isoformat())
 ocp_subsystem["access_urls"] = [
   {
-    "Web Console": ""
+    "Web Console": f"https://console-openshift-console.apps.{engagement['ocp_sub_domain']}.{context["ocp_base_url"]}"
   },
   {
-    "API": ""
+    "API": f"https://api.{engagement['ocp_sub_domain']}.{context["ocp_base_url"]}:6443"
   }
 ]
 
