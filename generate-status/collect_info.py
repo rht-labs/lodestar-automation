@@ -14,7 +14,7 @@ anarchy_subject_list = custom_object_api.list_namespaced_custom_object(
 )
 
 def getAnarchySubject(project_id):
-  subject = list(filter(lambda x: x["metadata"]["annotations"]["poolboy.gpte.redhat.com/resource-claim-name"] == f"labs.ocp4.na-{project_id}", anarchy_subject_list["items"]))
+  subject = list(filter(lambda x: project_id in x["metadata"]["annotations"]["poolboy.gpte.redhat.com/resource-claim-name"], anarchy_subject_list["items"]))
   if len(subject) > 0:
     return subject[0]
   else:
