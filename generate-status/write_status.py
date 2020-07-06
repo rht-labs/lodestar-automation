@@ -39,7 +39,7 @@ ocp_subsystem["access_urls"] = [
 
 if current_state == "provisioning":
   ocp_subsystem["status"] = "yellow"
-  ocp_subsystem["info"] = "Building cluster"
+  ocp_subsystem["info"] = "Building Cluster. This normally takes about ~45 min from launch. Please check back later for an updated status."
 elif current_state == desired_state :
   ocp_subsystem["status"] = "green"
   ocp_subsystem["info"] = "Working as expected"
