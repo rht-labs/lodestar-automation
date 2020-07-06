@@ -9,7 +9,7 @@ status = {
   "subsystems": []
 }
 ocp_subsystem = {
-  "name": "openshift",
+  "name": "OpenShift",
   "status": "",
   "state": "",
   "info": "",
