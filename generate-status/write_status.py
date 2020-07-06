@@ -28,10 +28,10 @@ ocp_subsystem["state"] = current_state
 ocp_subsystem["updated"] = str(datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc, microsecond=0).isoformat())
 ocp_subsystem["access_urls"] = [
   {
-    "Web Console": f"https://console-openshift-console.apps.{engagement['ocp_sub_domain']}.{context["ocp_base_url"]}"
+    "Web Console": f"https://console-openshift-console.apps.{engagement['ocp_sub_domain']}.{context['ocp_base_url']}"
   },
   {
-    "API": f"https://api.{engagement['ocp_sub_domain']}.{context["ocp_base_url"]}:6443"
+    "API": f"https://api.{engagement['ocp_sub_domain']}.{context['ocp_base_url']}:6443"
   }
 ]
 
