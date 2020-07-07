@@ -3,3 +3,4 @@ chart_path: "."
 target_revision: HEAD
 created_by: gitlab-argo-integration
 resource_prefix: gitlab-app
+syncPolicy: false 
