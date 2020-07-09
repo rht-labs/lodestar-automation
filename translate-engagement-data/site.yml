@@ -6,6 +6,10 @@
   - name: Read Engagement Data
     include_vars:
       file: "{{ directory }}/engagement.json"
+  - name: Read OCP credentials
+    include_vars:
+      file: "{{ directory }}/ocp-admin-credentials.json"
+    when: ocp_version is defined
   - name: Create OCP Chart directory if not exists
     file:
      path: "{{ directory }}/ocp-init"

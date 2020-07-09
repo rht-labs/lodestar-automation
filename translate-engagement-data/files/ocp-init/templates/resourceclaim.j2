@@ -20,6 +20,8 @@ spec:
         governor: labs.ocp4.na
         vars:
           job_vars:
+            admin_user: {{ .Values.ocp.admin_username }}
+            admin_password: {{ .Values.ocp.admin_password }}
             aws_region: {{ .Values.ocp.cloud_region }}
             ocp4_installer_version: {{ .Values.ocp.version }}
             ocp_subdomain: {{ .Values.ocp.sub_domain }}
