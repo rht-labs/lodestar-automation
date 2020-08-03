@@ -5,7 +5,7 @@
   tasks:
   - name: Fetch GitLab Projects
     uri:
-      url: "{{ gitlab_base_url }}/api/v4/groups/{{ gitlab_group }}/projects?include_subgroups=true"
+      url: "{{ gitlab_base_url }}/api/v4/groups/{{ gitlab_group }}/projects?include_subgroups=true&per_page=100"
       headers:
         Private-Token: "{{ gitlab_private_token }}"
     register: gitlab_groups
