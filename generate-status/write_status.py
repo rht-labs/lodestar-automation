@@ -29,11 +29,11 @@ ocp_subsystem["updated"] = str(datetime.datetime.utcnow().replace(tzinfo=datetim
 ocp_subsystem["access_urls"] = [
   {
     "title": "Web Console",
-    "url": f"https://console-openshift-console.apps.cluster-{engagement['ocp_sub_domain']}.{engagement['ocp_sub_domain']}.{context['ocp_base_url']}"
+    "url": f"https://console-openshift-console.apps.{engagement['ocp_sub_domain']}.{context['ocp_base_url']}"
   },
   {
     "title": "API",
-    "url": f"https://api.cluster-{engagement['ocp_sub_domain']}.{engagement['ocp_sub_domain']}.{context['ocp_base_url']}:6443"
+    "url": f"https://api.{engagement['ocp_sub_domain']}.{context['ocp_base_url']}:6443"
   }
 ]
 
