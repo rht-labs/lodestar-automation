@@ -66,7 +66,7 @@ def main():
             next_call = None
 
         # Merge the results json to the output list of items
-        rest_output = rest_output + r.json()\
+        rest_output = rest_output + r.json()
 
     module.exit_json(
       changed=False,
