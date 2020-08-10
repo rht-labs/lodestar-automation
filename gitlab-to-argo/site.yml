@@ -3,15 +3,10 @@
   hosts: local
   gather_facts: false
   tasks:
-  - name: Test
-    hello_world:
-    register: test
-  - debug: var=test
   - name: Fetch GitLab Projects
     rest_get:
       url: "{{ gitlab_base_url }}/api/v4/groups/{{ gitlab_group }}/projects?include_subgroups=true&per_page=10"
-      headers:
-        Private-Token: "{{ gitlab_private_token }}"
+      token: "{{ gitlab_private_token }}"
     register: gitlab_groups
   - name: Create output directory if not exists
     file:

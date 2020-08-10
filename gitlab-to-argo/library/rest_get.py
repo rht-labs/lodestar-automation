@@ -33,14 +33,14 @@ def main():
     module = AnsibleModule(
         argument_spec=dict(
             url=dict(required=True),
-            headers=dict(required=False),
+            token=dict(required=False),
         ),
         supports_check_mode=True,
     )
 
     # Retrieve the parameters passed in
     url         = module.params['url']
-    headers     = module.params['headers']
+    token       = module.params['token']
 
     # Initialize the output to empty list or dict
     # if re.match('/api/v[12]/settings', api_uri):
@@ -54,7 +54,9 @@ def main():
     while next_call is not None:
         r = requests.get(
             next_call,
-            headers=headers,
+            headers={
+                "Private-Token": token
+            },
             verify=False
         )
 
