@@ -63,6 +63,7 @@ def main():
         # Fetch the next URI returned by the REST call
         # TODO: better error handling when REST service returns non-200 OK
         if "Link" in r.headers:
+            print("Following link: " + r.headers["Link"])
             next_call = r.headers["Link"]
         else:
             next_call = None
