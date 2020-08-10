@@ -12,7 +12,6 @@
     file:
      path: output
      state: directory
-  - debug: var=gitlab_groups
   - name: Write Application Definitions
     template:
       src: files/application_template.j2

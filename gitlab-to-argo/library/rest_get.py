@@ -5,8 +5,7 @@ import re
 import requests
 
 """
-An ansible module to wrap the calls to Ansible Tower REST API (and potentially others).
-Main purpose is to better handle REST pagination
+An ansible module to wrap the calls to GitLab using pagination.
 """
 
 # pylint: disable=redefined-builtin,wildcard-import,unused-wildcard-import
@@ -21,11 +20,9 @@ author: Øystein Bedin & Jacob See
 requirements: [ ]
 '''
 EXAMPLES = '''
-- rest_get:
-    host_url: "https://tower.example.com"
-    api_uri: "/api/v2/projects/"
-    rest_user: "user"
-    rest_password: "passwd"
+rest_get:
+    url: "https://gitlab.com/api/v4/groups/1234/projects?include_subgroups=true"
+    token: "123456789"
 '''
 
 
@@ -42,10 +39,7 @@ def main():
     url         = module.params['url']
     token       = module.params['token']
 
-    # Initialize the output to empty list or dict
-    # if re.match('/api/v[12]/settings', api_uri):
-    #     rest_output = {}
-    # else:
+    # Initialize the output to empty list
     rest_output = []
 
     next_call = url
