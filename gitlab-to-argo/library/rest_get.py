@@ -62,7 +62,7 @@ def main():
 
         # Fetch the next URI returned by the REST call
         # TODO: better error handling when REST service returns non-200 OK
-        if "X-Next-Page" in r.headers:
+        if "X-Next-Page" in r.headers and str.isdigit(r.headers["X-Next-Page"]):
             if int(r.headers["X-Next-Page"]) <= int(r.headers["X-Total-Pages"]):
                 next_call = url + "&page=" + r.headers["X-Next-Page"]
         else:
