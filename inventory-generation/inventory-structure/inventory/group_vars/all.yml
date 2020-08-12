@@ -1,14 +1,14 @@
 ---
 
-inventory_name: "dummy-name"
+directory: "/tmp/testing"
 
-directories:
-  - "iac"
-  - "iac/inventories"
-  - "iac/inventories/{{ inventory_name }}"
-  - "iac/inventories/{{ inventory_name }}/inventory"
-  - "iac/inventories/{{ inventory_name }}/inventory/host_vars"
-  - "iac/inventories/{{ inventory_name }}/inventory/group_vars"
+inventories:
+  - dummy-name
+  - dummy-two
+
+inventory_dirs:
+  - group_vars
+  - host_vars
 
 files:
   - "iac/inventories/{{ inventory_name }}/inventory/hosts"
