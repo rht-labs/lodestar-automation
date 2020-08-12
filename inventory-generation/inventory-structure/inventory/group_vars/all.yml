@@ -1,7 +1,5 @@
 ---
 
-directory: "/tmp/testing"
-
 inventories:
   - dummy-name
   - dummy-two
