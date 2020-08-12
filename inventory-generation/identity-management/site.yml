@@ -13,7 +13,7 @@
 
   - name: "Read Engagement Data"
     set_fact:
-      json_data: "{{ (lookup('file', directory + '/engagement.json') | from_json).engagement_users | to_json }}"
+      json_data: "{{ (lookup('file', directory + '/iac/engagement.json') | from_json).engagement_users | to_json }}"
 
   - name: "Add users to inventory"
     set_fact:
