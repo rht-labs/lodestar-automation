@@ -1,0 +1,16 @@
+---
+
+- name: Create necessary directory structure and files
+  hosts: local
+  tasks:
+    - name: "Create directory structure"
+      file:
+        state: directory
+        path: "{{ directory }}/{{ item }}"
+      loop: "{{ directories }}"
+    - name: "Create files"
+      copy:
+        dest: "{{ directory }}/{{ item }}"
+        content: ""
+        force: no
+      loop: "{{ files }}"

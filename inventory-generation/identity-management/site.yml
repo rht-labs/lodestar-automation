@@ -1,0 +1,46 @@
+---
+
+- name: Generate identity-management inventory based off of engagement.json
+  hosts: local
+  gather_facts: false
+  tasks:
+
+  - name: "Fail If Working Directory Is Not Provided"
+    fail:
+      msg: "directory var needs to be provided in order to ensure a safe working directory"
+    when:
+      - directory is undefined or (directory | trim) == ""
+
+  - name: "Read Engagement Data"
+    set_fact:
+      json_data: "{{ (lookup('file', directory + '/engagement.json') | from_json).engagement_users | to_json }}"
+
+  - name: "Add users to inventory"
+    set_fact:
+      users: "{{ (users | default([])) +  [ { 'first_name': (item.first_name | trim), 'last_name': (item.last_name | trim), 'email': (item.email | trim) , 'user_name': (item.first_name | trim | lower)[0] + (item.last_name | trim | lower) } ] }}"
+    loop: "{{ json_data }}"
+
+  - name: "Get Unique Groups"
+    set_fact:
+      unique_groups: "{{ json_data | from_json | json_query('[].role') | unique }}"
+
+  - name: "Set Group Membership"
+    set_fact:
+      usrgrp: "{{ (usrgrp | default([])) + [ {'name': item, 'members': (json_data | from_json |  json_query(query)) } ] }}"
+    vars:
+      query: "[?role =='{{ item }}'].email"
+    loop: "{{ unique_groups }}" 
+
+  - name: "Assemble inventory"
+    set_fact:
+      inventory_content: "{{ { 'identities': { 'users': users, 'groups': usrgrp } } }}"
+
+  - name: "Write inventory to file"
+    copy:
+      content: "{{ inventory_content | to_nice_yaml(indent=2) }}"
+      dest: "{{ directory }}/iac/inventories/identity-management/inventory/group_vars/all.yml"
+
+  - name: "Create hosts file"
+    copy:
+      content: "[identity-hosts]\nlocalhost"
+      dest: "{{ directory }}/iac/inventories/identity-management/inventory/hosts"
