@@ -3,9 +3,13 @@
   hosts: local
   gather_facts: false
   tasks:
+  - name: Create config file structure
+    file:
+      path: "{{ directory }}/{{ config_dir }}"
+      state: directory
   - name: Set credentials file
     set_fact:
-      ocp_credentials_file: "{{ directory }}/ocp-admin-credentials.json"
+      ocp_credentials_file: "{{ directory }}/{{ config_dir }}/ocp-admin-credentials.json"
   - name: Check if credentials file already exist
     stat:
       path: "{{ ocp_credentials_file }}"
