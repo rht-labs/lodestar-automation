@@ -13,6 +13,14 @@
       - "ocp-admin-credentials.json"
       - "ocp-ldap-sa-credentials.json"
     when: ocp_version is defined
+  - name: Ensure that region is lowercase for orchestration automation purposes
+    set_fact:
+      formatted_region: "{{ engagement_region | lower }}"
+    when: engagement_region is defined
+  - name: Default to North America in the absense of another deployment region
+    set_fact:
+      formatted_region: "na"
+    when: not formatted_region
   - name: Create OCP Chart directory if not exists
     file:
      path: "{{ directory }}/ocp-init"

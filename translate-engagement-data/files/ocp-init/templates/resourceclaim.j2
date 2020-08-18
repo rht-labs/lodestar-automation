@@ -4,7 +4,7 @@
 apiVersion: poolboy.gpte.redhat.com/v1
 kind: ResourceClaim
 metadata:
-  name: labs.ocp4.na-{{ .Values.project_id }}
+  name: "labs.ocp4.{{ .Values.region }}-{{ .Values.project_id }}"
 spec:
   resources:
   - template:
@@ -13,11 +13,11 @@ spec:
       metadata:
         annotations:
           poolboy.gpte.redhat.com/resource-provider-name: babylon
-        generateName: labs.ocp4.na-
+        generateName: "labs.ocp4.{{ .Values.region }}-"
         labels:
-          governor:  labs.ocp4.na
+          governor:  "labs.ocp4.{{ .Values.region }}"
       spec:
-        governor: labs.ocp4.na
+        governor: "labs.ocp4.{{ .Values.region }}"
         vars:
           job_vars:
             admin_user: "{{ .Values.ocp.admin_username }}"
