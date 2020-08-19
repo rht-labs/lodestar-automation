@@ -12,7 +12,7 @@ spec:
       metadata:
         annotations:
           poolboy.gpte.redhat.com/resource-provider-name: babylon
-        generateName: {{ governor_name }}-{{ claim_postfix | default(omit) }}
+        generateName: {{ governor_name }}-{{ claim_postfix | default("") }}
         labels:
           governor: {{ governor_name }} 
       spec:
