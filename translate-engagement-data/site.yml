@@ -19,7 +19,7 @@
      state: directory
   - name: Assemble Anarchy Governor Name
     set_fact:
-      governor_name: "{{ 'labs.ocp4.' + ((engagement_region | lower) | default("na")) }}"
+      governor_name: "{{ 'labs.ocp4.' + ((engagement_region | lower) | default('na')) }}"
   - name: Create claim content
     set_fact:
       claim_content:
