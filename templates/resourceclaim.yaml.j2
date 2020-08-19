@@ -19,5 +19,5 @@ spec:
         governor: {{ governor_name }} 
         vars:
           job_vars:
-            {{ claim_content }}
+            {{ claim_content | indent(12) }}
 {% endif %}
