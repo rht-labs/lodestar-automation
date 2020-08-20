@@ -11,36 +11,53 @@
     when:
       - directory is undefined or (directory | trim) == ""
 
-  - name: "Read Engagement Data"
-    set_fact:
-      json_data: "{{ (lookup('file', directory + '/iac/engagement.json') | from_json).engagement_users | to_json }}"
+  - name: Read Engagement Data
+    include_vars:
+      file: "{{ directory }}/engagement.json"
 
   - name: "Add users to inventory"
     set_fact:
       users: "{{ (users | default([])) +  [ { 'first_name': (item.first_name | trim), 'last_name': (item.last_name | trim), 'email': (item.email | trim) , 'user_name': (item.first_name | trim | lower)[0] + (item.last_name | trim | lower) } ] }}"
-    loop: "{{ json_data }}"
+    loop: "{{ engagement_users }}"
 
   - name: "Get Unique Groups"
     set_fact:
-      unique_groups: "{{ json_data | from_json | json_query('[].role') | unique }}"
+      unique_groups: "{{ engagement_users | json_query('[].role') | unique }}"
 
   - name: "Set Group Membership"
     set_fact:
-      usrgrp: "{{ (usrgrp | default([])) + [ {'name': item, 'members': (json_data | from_json |  json_query(query)) } ] }}"
+      usrgrp: "{{ (usrgrp | default([])) + [ {'name': item, 'members': (engagement_users |  json_query(query)) } ] }}"
     vars:
       query: "[?role =='{{ item }}'].email"
     loop: "{{ unique_groups }}" 
 
   - name: "Assemble inventory"
     set_fact:
-      inventory_content: "{{ { 'identities': { 'users': users, 'groups': usrgrp } } }}"
+      claim_content: "{{ { 'identities': { 'users': users, 'groups': usrgrp } } | to_nice_yaml(indent=2) }}"
 
   - name: "Write inventory to file"
     copy:
-      content: "{{ inventory_content | to_nice_yaml(indent=2) }}"
+      content: "{{ claim_content }}"
       dest: "{{ directory }}/iac/inventories/identity-management/inventory/group_vars/all.yml"
 
   - name: "Create hosts file"
     copy:
       content: "[identity-hosts]\nlocalhost"
       dest: "{{ directory }}/iac/inventories/identity-management/inventory/hosts"
+
+#  - name: "Get Project ID"
+#    set_fact:
+#      project_id: "{{ directory | basename }}"
+
+  - name: "Assemble governor name"
+    set_fact:
+      governor_name: "{{ 'labs.ocp4.' + (engagement_region | default('na') | lower) }}"
+
+#  - name: "Format Claim Content"
+#    set_fact:
+#      claim_content: "{{ claim_content | to_nice_yaml(indent=2) }}"
+
+  - name: "Create ResourceClaim"
+    copy:
+      content: "{{ lookup('template', inventory_dir + '/../files/templates/resourceclaim.yaml.j2') }}"
+      dest: "{{ directory }}/ocp-init/id-mgmt.yaml"
