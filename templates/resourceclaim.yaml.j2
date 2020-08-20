@@ -1,9 +1,10 @@
+#jinja2: trim_blocks:False
 ---
 {% if ocp_cloud_provider_name != 'other' %}
 apiVersion: poolboy.gpte.redhat.com/v1
 kind: ResourceClaim
 metadata:
-  name: {{ governor_name }}-{{ project_id }}
+  name: {{ governor_name }}-{{ project_id }}{%+ if generate_name %}-{{ (999 | random | to_uuid) }}{% endif %}
 spec:
   resources:
   - template:
