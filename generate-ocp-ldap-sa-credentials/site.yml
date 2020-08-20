@@ -1,0 +1,31 @@
+---
+- name: Generate OCP ldap-sa credentials
+  hosts: local
+  gather_facts: false
+  tasks:
+  - name: Create config file structure
+    file:
+      path: "{{ directory }}/{{ config_dir }}"
+      state: directory
+  - name: Set credentials file
+    set_fact:
+      credentials_file: "{{ directory }}/{{ config_dir }}/ocp-ldap-sa-credentials.json"
+  - name: Check if credentials file already exist
+    stat:
+      path: "{{ credentials_file }}"
+    register: r_credentials_file
+  - name: Read Engagement Data
+    include_vars:
+      file: "{{ directory }}/engagement.json"
+  - name: Only if credentials haven't already been created
+    block:
+    - name: Create password
+      set_fact:
+        sa_password: "{{ lookup('password', '/dev/null length=32 chars=ascii_letters,digits') }}"
+    - name: Create credentials file
+      copy:
+        dest: "{{ credentials_file }}"
+        content: "{{ {'ocp_ldap_sa_username':'ldap-sa','ocp_ldap_sa_password':sa_password } | to_nice_json }}"
+    when:
+      - r_credentials_file.stat.exists == False
+      - ocp_version is defined

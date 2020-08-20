@@ -6,27 +6,35 @@
   - name: Read Engagement Data
     include_vars:
       file: "{{ directory }}/engagement.json"
-  - name: Read OCP credentials
+  - name: Read credentials
     include_vars:
-      file: "{{ directory }}/ocp-admin-credentials.json"
+      file: "{{ directory }}/{{ config_dir }}/{{ item }}"
+    loop:
+      - "ocp-admin-credentials.json"
+      - "ocp-ldap-sa-credentials.json"
     when: ocp_version is defined
-  - name: Create OCP Chart directory if not exists
+  - name: Create OCP manifest directory if not present 
     file:
      path: "{{ directory }}/ocp-init"
      state: directory
-  - name: Write OCP Chart
-    template:
-      src: "{{ item }}"
-      dest: "{{ directory }}/ocp-init/{{ item | basename | regex_replace('\\.j2$', '.yaml') }}"
-    with_fileglob:
-      - ocp-init/*.j2
-  - name: Create OCP Templates directory if not exists
-    file:
-     path: "{{ directory }}/ocp-init/templates"
-     state: directory
-  - name: Write OCP Templates
-    template:
-      src: "{{ item }}"
-      dest: "{{ directory }}/ocp-init/templates/{{ item | basename | regex_replace('\\.j2$', '.yaml') }}"
-    with_fileglob:
-      - ocp-init/templates/*.j2
+  - name: Assemble Anarchy Governor Name
+    set_fact:
+      governor_name: "{{ 'labs.ocp4.' + (engagement_region | default('na') | lower) }}"
+  - name: Add Claim Content
+    set_fact:
+      claim_content:  
+        email: "{{ engagement_lead_email }}"
+        admin_user: "{{ ocp_admin_username }}"
+        admin_password: "{{ ocp_admin_password }}"
+        aws_region: "{{ ocp_cloud_provider_region }}"
+        ocp4_installer_version: "{{ ocp_version }}"
+        ocp_ldap_sa_user: "{{ ocp_ldap_sa_username }}"
+        ocp_ldap_sa_password: "{{ ocp_ldap_sa_password }}"
+        ocp_subdomain: "{{ ocp_sub_domain }}"
+  - name: Format Claim Content
+    set_fact:
+      claim_content: "{{ claim_content | to_nice_yaml }}"
+  - name: Create Resource Claim
+    copy:
+      content: "{{ lookup('template', inventory_dir + '/../files/templates/resourceclaim.yaml.j2') }}"
+      dest: "{{ directory }}/ocp-init/cluster-init.yaml"
