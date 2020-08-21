@@ -37,6 +37,10 @@
       query: "[?role =='{{ item }}'].email"
     loop: "{{ unique_groups }}" 
 
+  - name: Add Group of Groups
+    set_fact:
+      usrgrp: "{{ (usrgrp | default([])) + [ {'name': 'ldap-users', 'childgroups': unique_groups } ] }}"
+
   - name: "Set IDM facts"
     set_fact:
       ipa_host: "{{ 'https://ipa.apps.' + (ocp_sub_domain | lower) + '.' + (engagement_region | default('na') | lower) +'-1.' + ocp_base_url }}" 
