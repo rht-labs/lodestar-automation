@@ -11,9 +11,6 @@
     when:
       - directory is undefined or (directory | trim) == ""
 
-  - debug:
-      msg: "{{ directory }}"
-
   - name: Read Engagement Data
     include_vars:
       file: "{{ directory }}/engagement.json"
@@ -34,6 +31,12 @@
       query: "[?role =='{{ item }}'].email"
     loop: "{{ unique_groups }}" 
 
+  - name: "Set IDM facts"
+    set_fact:
+      ipa_host: "{{ 'https://ipa.apps.' + (ocp_sub_domain | lower) + '.' + (engagement_region | default('na') | lower) +'-1.' + ocp_base_url }}" 
+      ipa_admin_user: "{{ ocp_admin_username }}"
+      ipa_admin_password: "{{ ocp_admin_password }}"
+
   - name: "Assemble inventory"
     set_fact:
       claim_content: "{{ { 'identities': { 'users': users, 'groups': usrgrp } } | to_nice_yaml(indent=2) }}"
@@ -48,17 +51,10 @@
       content: "[identity-hosts]\nlocalhost"
       dest: "{{ directory }}/iac/inventories/identity-management/inventory/hosts"
 
-#  - name: "Get Project ID"
-#    set_fact:
-#      project_id: "{{ directory | basename }}"
-
   - name: "Assemble governor name"
     set_fact:
       governor_name: "{{ 'labs.ocp4.' + (engagement_region | default('na') | lower) }}"
 
-#  - name: "Format Claim Content"
-#    set_fact:
-#      claim_content: "{{ claim_content | to_nice_yaml(indent=2) }}"
 
   - name: "Create ResourceClaim"
     copy:
