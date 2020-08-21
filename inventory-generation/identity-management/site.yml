@@ -39,7 +39,7 @@
 
   - name: "Assemble inventory"
     set_fact:
-      claim_content: "{{ { 'identities': { 'users': users, 'groups': usrgrp } } | to_nice_yaml(indent=2) }}"
+      claim_content: "{{ { 'ipa_host': ipa_host, 'ipa_admin_user': ipa_admin_user, 'ipa_admin_password': ipa_admin_password, 'identities': { 'users': users, 'groups': usrgrp } } | to_nice_yaml(indent=2) }}"
 
   - name: "Write inventory to file"
     copy:
