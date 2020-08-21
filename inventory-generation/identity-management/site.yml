@@ -20,6 +20,7 @@
       file: "{{ directory }}/{{ config_dir }}/{{ item }}"
     loop:
       - "ocp-admin-credentials.json"
+      - "ocp-ldap-sa-credentials.json"
 
   - name: "Add users to inventory"
     set_fact:
@@ -28,7 +29,7 @@
 
   - name: "Add LDAP Service Account"
     set_fact:
-      users: "{{ (users | default([])) + [ { 'first_name': 'LDAP', 'last_name': 'SA', 'email': 'ldap@localhost', 'user_name': 'ldap-sa' } ] }}"
+      users: "{{ (users | default([])) + [ { 'first_name': 'LDAP', 'last_name': 'SA', 'email': 'ldap@localhost', 'user_name': ocp_ldap_sa_username, 'generate_password': false, 'password': ocp_ldap_sa_password  } ] }}"
 
   - name: "Get Unique Groups"
     set_fact:
