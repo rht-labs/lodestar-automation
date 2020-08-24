@@ -24,12 +24,12 @@
 
   - name: "Add users to inventory"
     set_fact:
-      users: "{{ (users | default([])) +  [ { 'first_name': (item.first_name | trim), 'last_name': (item.last_name | trim), 'email': (item.email | trim) , 'user_name': (item.first_name | trim | lower)[0] + (item.last_name | trim | lower) } ] }}"
+      users: "{{ (users | default([])) +  [ { 'first_name': (item.first_name | trim), 'last_name': (item.last_name | trim), 'email': (item.email | trim) , 'user_name': (item.email.split('@')[0] | trim) } ] }}"
     loop: "{{ engagement_users }}"
 
   - name: "Add LDAP Service Account"
     set_fact:
-      users: "{{ (users | default([])) + [ { 'first_name': 'LDAP', 'last_name': 'SA', 'email': 'ldap@localhost', 'user_name': ocp_ldap_sa_username, 'generate_password': false, 'password': ocp_ldap_sa_password  } ] }}"
+      users: "{{ (users | default([])) + [ { 'first_name': 'LDAP', 'last_name': 'SA', 'email': 'ldap@localhost.com', 'user_name': ocp_ldap_sa_username, 'generate_password': false, 'password': ocp_ldap_sa_password  } ] }}"
 
   - name: "Get Unique Groups"
     set_fact:
@@ -37,14 +37,12 @@
 
   - name: "Set Group Membership"
     set_fact:
-      usrgrp: "{{ (usrgrp | default([])) + [ {'name': item, 'members': (engagement_users |  json_query(query)) } ] }}"
-    vars:
-      query: "[?role =='{{ item }}'].email"
+      usrgrp: "{{ (usrgrp | default([])) + [ {'name': item, 'members': (engagement_users | selectattr('role','equalto',item) | map(attribute='email') | map('regex_replace','@.*','') | list) } ] }}" 
     loop: "{{ unique_groups }}" 
 
   - name: Add LDAP Groups Grouping
     set_fact:
-      usrgrp: "{{ (usrgrp | default([])) + [ {'name': 'ldap-users', 'childgroups': unique_groups } ] }}"
+      usrgrp: "{{ (usrgrp | default([])) + [ {'name': 'ldap-members', 'childgroups': unique_groups } ] }}"
 
   - name: "Set IDM facts"
     set_fact:
