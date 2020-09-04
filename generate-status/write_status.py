@@ -21,6 +21,10 @@ ocp_subsystem = {
 with open(f"../../{subject['directory']}/engagement.json", "r") as read_file:
   engagement = json.load(read_file)
 
+if "current_state" not in subject["anarchy_subject"]["spec"]["vars"] or "desired_state" not in subject["anarchy_subject"]["spec"]["vars"]:
+  print(f"Skipping {subject['directory']} - state information not found in the Anarchy subject")
+  return
+
 current_state = subject["anarchy_subject"]["spec"]["vars"]["current_state"]
 desired_state = subject["anarchy_subject"]["spec"]["vars"]["desired_state"]
 
