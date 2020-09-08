@@ -1,5 +1,6 @@
 import json
 import datetime
+from os import path
 
 subject = context["repositories"]
 
@@ -21,9 +22,22 @@ ocp_subsystem = {
 with open(f"../../{subject['directory']}/engagement.json", "r") as read_file:
   engagement = json.load(read_file)
 
+if path.exists(f"../../{subject['directory']}/status.json"):
+  with open(f"../../{subject['directory']}/status.json", "r") as read_file:
+    existing_status = json.load(read_file)
+else:
+  existing_status = False
+
 if "current_state" not in subject["anarchy_subject"]["spec"]["vars"] or "desired_state" not in subject["anarchy_subject"]["spec"]["vars"]:
   print(f"Skipping {subject['directory']} - state information not found in the Anarchy subject")
   return
+
+if existing_status:
+  existing_ocp_subsystem = [subsystem for subsystem in existing_status["subsystems"] if subsystem["name"] == "OpenShift"]
+  if len(existing_ocp_subsystem) > 0:
+    if subject["anarchy_subject"]["spec"]["vars"]["current_state"] == existing_ocp_subsystem[0]["state"]:
+      print(f"Skipping {subject['directory']} - state has not changed since last update")
+      return
 
 current_state = subject["anarchy_subject"]["spec"]["vars"]["current_state"]
 desired_state = subject["anarchy_subject"]["spec"]["vars"]["desired_state"]
