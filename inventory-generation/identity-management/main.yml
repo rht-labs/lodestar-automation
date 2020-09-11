@@ -52,7 +52,7 @@
 
   - name: "Set IDM facts"
     set_fact:
-      ipa_host: "{{ 'https://ipa.apps.' + (ocp_sub_domain | lower) + '.' + (engagement_region | default('na') | lower) +'-1.' + ocp_base_url }}" 
+      ipa_host: "{{ 'https://ipa.apps.' + (ocp_sub_domain | lower) + '.' + environment_root | default(engagement_region | default('na') | lower) +'-1.' + ocp_base_url }}" 
       ipa_admin_user: "{{ ocp_admin_username }}"
       ipa_admin_password: "{{ ocp_admin_password }}"
       ipa_validate_certs: "{{ ipa_validate_certs | default(true) }}"
