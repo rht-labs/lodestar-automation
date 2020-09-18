@@ -43,8 +43,8 @@
 
   - name: "Set Group Membership"
     set_fact:
-      usrgrp: "{{ (usrgrp | default([])) + [ {'name': item, 'members': (engagement_users | selectattr('role','equalto',item) | map(attribute='email') | map('regex_replace','@.*','') | list) } ] }}" 
-    loop: "{{ unique_groups }}" 
+      usrgrp: "{{ (usrgrp | default([])) + [ {'name': item, 'members': (engagement_users | selectattr('role','equalto',item) | map(attribute='email') | map('regex_replace','@.*','') | list) } ] }}"
+    loop: "{{ unique_groups }}"
 
   - name: Add LDAP Groups Grouping
     set_fact:
@@ -52,14 +52,14 @@
 
   - name: "Set IDM facts"
     set_fact:
-      ipa_host: "{{ 'ipa.apps.' + (ocp_sub_domain | lower) + '.' + environment_root | default(engagement_region | default('na') | lower) +'-1.' + ocp_base_url }}" 
+      ipa_host: "{{ 'ipa.apps.' + (ocp_sub_domain | lower) + '.' + environment_root | default(engagement_region | default('na') | lower) +'-1.' + ocp_base_url }}"
       ipa_admin_user: "{{ ocp_admin_username }}"
       ipa_admin_password: "{{ ocp_admin_password }}"
       ipa_validate_certs: "{{ ipa_validate_certs | default(true) }}"
 
   - name: "Assemble inventory"
     set_fact:
-      claim_content: "{{ { 'ipa_validate_certs': ipa_validate_certs, 'ipa_host': ipa_host, 'ipa_admin_user': ipa_admin_user, 'ipa_admin_password': ipa_admin_password, 'identities': { 'users': users, 'groups': usrgrp } } | to_nice_yaml(indent=2) }}"
+      claim_content: "{{ { 'ipa_validate_certs': ipa_validate_certs, 'ipa_host': ipa_host, 'ipa_admin_user': ipa_admin_user, 'ipa_admin_password': ipa_admin_password, 'lodestar_identities': { 'users': users, 'groups': usrgrp } } | to_nice_yaml(indent=2) }}"
 
   - name: "Write inventory to file"
     copy:
