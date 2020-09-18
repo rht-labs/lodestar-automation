@@ -11,6 +11,12 @@
     when:
       - directory is undefined or (directory | trim) == ""
 
+  - name: "Fail If Governor Name Is Not Provided"
+    fail:
+      msg: "governor_name var needs to be provided in order to indicate babylon workflow"
+    when:
+      - governor_name is undefined or (governor_name | trim) == ""
+
   - name: Read Engagement Data
     include_vars:
       file: "{{ directory }}/engagement.json"
@@ -46,7 +52,7 @@
 
   - name: "Set IDM facts"
     set_fact:
-      ipa_host: "{{ 'https://ipa.apps.' + (ocp_sub_domain | lower) + '.' + (engagement_region | default('na') | lower) +'-1.' + ocp_base_url }}"
+      ipa_host: "{{ 'ipa.apps.' + (ocp_sub_domain | lower) + '.' + environment_root | default(engagement_region | default('na') | lower) +'-1.' + ocp_base_url }}"
       ipa_admin_user: "{{ ocp_admin_username }}"
       ipa_admin_password: "{{ ocp_admin_password }}"
       ipa_validate_certs: "{{ ipa_validate_certs | default(true) }}"
@@ -64,11 +70,6 @@
     copy:
       content: "[identity-hosts]\nlocalhost"
       dest: "{{ directory }}/iac/inventories/identity-management/inventory/hosts"
-
-  - name: "Assemble governor name"
-    set_fact:
-      governor_name: "{{ 'labs.ocp4.' + (engagement_region | default('na') | lower) }}"
-
 
   - name: "Create ResourceClaim"
     copy:
