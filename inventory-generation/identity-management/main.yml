@@ -17,6 +17,10 @@
     when:
       - governor_name is undefined or (governor_name | trim) == ""
 
+  - name: Generate Timestamp
+    set_fact:
+      inv_ts: " {{ lookup('pipe','date +%Y%m%d%H%M%S') }}"
+
   - name: Read Engagement Data
     include_vars:
       file: "{{ directory }}/engagement.json"
@@ -61,17 +65,43 @@
     set_fact:
       claim_content: "{{ { 'customer_name': customer_name, 'project_name': project_name, 'ipa_validate_certs': ipa_validate_certs, 'ipa_host': ipa_host, 'ipa_admin_user': ipa_admin_user, 'ipa_admin_password': ipa_admin_password, 'lodestar_identities': { 'users': users, 'groups': usrgrp } } | to_nice_yaml(indent=2) }}"
 
+  - name: "Check For Existing Inventory File"
+    stat:
+      path: "{{ directory }}/iac/inventories/identity-management/inventory/group_vars/all.yml"
+    register: existing_inv
+
+  - name: "Pull existing inventory vars"
+    include_vars:
+      file: "{{ directory }}/iac/inventories/identity-management/inventory/group_vars/all.yml"
+      name: existing_inv_contents
+    when:
+      - existing_inv.stat.exists
+
+  - name: "Diff existing vars with new inventory"
+    set_fact:
+      inv_has_diff: true
+    when:
+      - existing_inv.stat.exists
+      - existing_inv_contents is defined
+      - existing_inv_contents != (claim_content | from_yaml)
+
   - name: "Write inventory to file"
     copy:
       content: "{{ claim_content }}"
       dest: "{{ directory }}/iac/inventories/identity-management/inventory/group_vars/all.yml"
+    when:
+      - (inv_has_diff is defined and inv_has_diff is true) or not existing_inv.stat.exists
 
   - name: "Create hosts file"
     copy:
       content: "[identity-hosts]\nlocalhost"
       dest: "{{ directory }}/iac/inventories/identity-management/inventory/hosts"
+    when:
+      - (inv_has_diff is defined and inv_has_diff is true) or not existing_inv.stat.exists
 
   - name: "Create ResourceClaim"
     copy:
       content: "{{ lookup('template', inventory_dir + '/../files/templates/resourceclaim.yaml.j2') }}"
-      dest: "{{ directory }}/ocp-init/id-mgmt.yaml"
+      dest: "{{ directory }}/ocp-init/id-mgmt-{{ inv_ts | trim }}.yaml"
+    when:
+      - (inv_has_diff is defined and inv_has_diff is true) or not existing_inv.stat.exists
