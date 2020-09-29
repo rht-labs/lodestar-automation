@@ -59,11 +59,23 @@
 
   - name: "Assemble inventory"
     set_fact:
-      claim_content: "{{ { 'customer_name': customer_name, 'project_name': project_name, 'ipa_validate_certs': ipa_validate_certs, 'ipa_host': ipa_host, 'ipa_admin_user': ipa_admin_user, 'ipa_admin_password': ipa_admin_password, 'lodestar_identities': { 'users': users, 'groups': usrgrp } } | to_nice_yaml(indent=2) }}"
+      claim_content:
+        env_end_date: "{{ (archive_date | to_datetime('%Y-%m-%dT%H:%M:%S%z')).strftime('%d %b %Y') }}"
+        end_date: "{{ (end_date | to_datetime('%Y-%m-%dT%H:%M:%S%z')).strftime('%d %b %Y') }}"
+        start_date: "{{ (start_date | to_datetime('%Y-%m-%dT%H:%M:%S%z')).strftime('%d %b %Y') }}"
+        customer_name: "{{ customer_name }}"
+        project_name: "{{ project_name }}"
+        ipa_validate_certs: "{{ ipa_validate_certs }}"
+        ipa_host: "{{ ipa_host }}"
+        ipa_admin_user: "{{ ipa_admin_user }}"
+        ipa_admin_password: "{{ ipa_admin_password }}"
+        lodestar_identities:
+          users: "{{ users }}"
+          groups: "{{ usrgrp }}"
 
   - name: "Write inventory to file"
     copy:
-      content: "{{ claim_content }}"
+      content: "{{ claim_content | to_nice_yaml(indent=2) }}"
       dest: "{{ directory }}/iac/inventories/identity-management/inventory/group_vars/all.yml"
 
   - name: "Create hosts file"
