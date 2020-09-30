@@ -4,7 +4,7 @@
 apiVersion: poolboy.gpte.redhat.com/v1
 kind: ResourceClaim
 metadata:
-  name: {{ governor_name }}-{{ project_id }}{% if (generate_name | default(false)) %}-{{ (999 | random | to_uuid) }}{% endif %}
+  name: {{ governor_name }}-{{ project_id }}{% if inv_ts is defined %}-{{ inv_ts | trim }}{% endif %}
 spec:
   resources:
   - template:
