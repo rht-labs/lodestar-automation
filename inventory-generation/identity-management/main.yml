@@ -89,15 +89,11 @@
     copy:
       content: "{{ claim_content }}"
       dest: "{{ directory }}/iac/inventories/identity-management/inventory/group_vars/all.yml"
-    when:
-      - (inv_has_diff is defined and inv_has_diff is true) or not existing_inv.stat.exists
 
   - name: "Create hosts file"
     copy:
       content: "[identity-hosts]\nlocalhost"
       dest: "{{ directory }}/iac/inventories/identity-management/inventory/hosts"
-    when:
-      - (inv_has_diff is defined and inv_has_diff is true) or not existing_inv.stat.exists
 
   - name: "Create ResourceClaim"
     copy:
