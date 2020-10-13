@@ -28,19 +28,19 @@ if path.exists(f"../../{subject['directory']}/status.json"):
 else:
   existing_status = False
 
-if "current_state" not in subject["anarchy_subject"]["spec"]["vars"] or "desired_state" not in subject["anarchy_subject"]["spec"]["vars"]:
+if "current_state" not in subject["ocp_anarchy_subject"]["spec"]["vars"] or "desired_state" not in subject["ocp_anarchy_subject"]["spec"]["vars"]:
   print(f"Skipping {subject['directory']} - state information not found in the Anarchy subject")
   return
 
 if existing_status:
   existing_ocp_subsystem = [subsystem for subsystem in existing_status["subsystems"] if subsystem["name"] == "OpenShift"]
   if len(existing_ocp_subsystem) > 0:
-    if subject["anarchy_subject"]["spec"]["vars"]["current_state"] == existing_ocp_subsystem[0]["state"]:
+    if subject["ocp_anarchy_subject"]["spec"]["vars"]["current_state"] == existing_ocp_subsystem[0]["state"]:
       print(f"Skipping {subject['directory']} - state has not changed since last update")
       return
 
-current_state = subject["anarchy_subject"]["spec"]["vars"]["current_state"]
-desired_state = subject["anarchy_subject"]["spec"]["vars"]["desired_state"]
+current_state = subject["ocp_anarchy_subject"]["spec"]["vars"]["current_state"]
+desired_state = subject["ocp_anarchy_subject"]["spec"]["vars"]["desired_state"]
 
 region = engagement["engagement_region"].lower() if "engagement_region" in engagement else "na"
 region_url = f"{region}-1"
