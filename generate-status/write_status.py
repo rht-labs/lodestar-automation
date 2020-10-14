@@ -28,7 +28,7 @@ if path.exists(f"../../{subject['directory']}/status.json"):
 else:
   existing_status = False
 
-if "current_state" not in subject["ocp_anarchy_subject"]["spec"]["vars"] or "desired_state" not in subject["ocp_anarchy_subject"]["spec"]["vars"]:
+if "current_state" not in subject["ocp_anarchy_subject"]["spec"]["vars"]:
   print(f"Skipping {subject['directory']} - state information not found in the Anarchy subject")
   return
 
@@ -40,7 +40,7 @@ if existing_status:
       return
 
 current_state = subject["ocp_anarchy_subject"]["spec"]["vars"]["current_state"]
-desired_state = subject["ocp_anarchy_subject"]["spec"]["vars"]["desired_state"]
+desired_state = subject["ocp_anarchy_subject"]["spec"]["vars"]["desired_state"] if "desired_state" in subject["ocp_anarchy_subject"]["spec"]["vars"] else None
 
 region = engagement["engagement_region"].lower() if "engagement_region" in engagement else "na"
 region_url = f"{region}-1"
@@ -61,7 +61,7 @@ ocp_subsystem["access_urls"] = [
 if current_state == "provisioning":
   ocp_subsystem["status"] = "yellow"
   ocp_subsystem["info"] = "Building Cluster. This normally takes about ~45 min from launch. Please check back later for an updated status."
-elif current_state == desired_state :
+elif current_state == desired_state or (current_state == "started" and desired_state is None):
   ocp_subsystem["status"] = "green"
   ocp_subsystem["info"] = "Working as expected"
 else:
