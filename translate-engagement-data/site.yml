@@ -13,16 +13,16 @@
       - "ocp-admin-credentials.json"
       - "ocp-ldap-sa-credentials.json"
     when: ocp_version is defined
-  - name: Create OCP manifest directory if not present 
+  - name: Create OCP manifest directory if not present
     file:
      path: "{{ directory }}/ocp-init"
      state: directory
   - name: Assemble Anarchy Governor Name
     set_fact:
-      governor_name: "{{ 'labs.ocp4.' + (engagement_region | default('na') | lower) }}"
+      governor_name: "{{ 'labs.ocp4.' + (engagement_region | default('dev-1') | lower) }}"
   - name: Add Claim Content
     set_fact:
-      claim_content:  
+      claim_content:
         email: "{{ engagement_lead_email }}"
         admin_user: "{{ ocp_admin_username }}"
         admin_password: "{{ ocp_admin_password }}"
