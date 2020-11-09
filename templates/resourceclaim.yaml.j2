@@ -1,6 +1,5 @@
 #jinja2: trim_blocks:False
 ---
-{% if ocp_cloud_provider_name != 'other' %}
 apiVersion: poolboy.gpte.redhat.com/v1
 kind: ResourceClaim
 metadata:
@@ -21,4 +20,3 @@ spec:
         vars:
           job_vars:
             {{ claim_content | to_nice_yaml | indent(12) }}
-{% endif %}
