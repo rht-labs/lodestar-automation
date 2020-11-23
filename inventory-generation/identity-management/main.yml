@@ -54,6 +54,10 @@
     set_fact:
       usrgrp: "{{ (usrgrp | default([])) + [ {'name': 'ldap-members', 'childgroups': unique_groups } ] }}"
 
+  - name: "Set List of Mail CC"
+    set_fact:
+      cc_list: "{{ ', '.join(( '{{ engagement_lead_email }}', '{{ technical_lead_email }}' )) }}"
+
   - name: "Set IDM facts"
     set_fact:
       ipa_host: "{{ 'ipa.apps.' + (ocp_sub_domain | lower) + '.' + engagement_region | default('dev-1') + '.' + ocp_base_url }}"
@@ -73,6 +77,7 @@
         ipa_host: "{{ ipa_host }}"
         ipa_admin_user: "{{ ipa_admin_user }}"
         ipa_admin_password: "{{ ipa_admin_password }}"
+        list_of_mail_cc: "{{ cc_list }}"
         lodestar_identities:
           users: "{{ users }}"
           groups: "{{ usrgrp }}"
