@@ -11,9 +11,9 @@ status = {
 }
 ocp_subsystem = {
   "name": "OpenShift",
-  "status": "",
+  "status": "yellow",
   "state": "",
-  "info": "",
+  "info": "No status available. Please check back later.",
   "updated": "",
   "access_urls": [],
   "messages": []
@@ -42,33 +42,40 @@ if existing_status:
 current_state = subject["ocp_anarchy_subject"]["spec"]["vars"]["current_state"]
 desired_state = subject["ocp_anarchy_subject"]["spec"]["vars"]["desired_state"] if "desired_state" in subject["ocp_anarchy_subject"]["spec"]["vars"] else None
 
-region = engagement["engagement_region"].lower() if "engagement_region" in engagement else "na"
+region = engagement["engagement_region"].lower() if "engagement_region" in engagement else "dev"
 region_url = f"{region}-1"
 
-ocp_subsystem["state"] = current_state
-ocp_subsystem["updated"] = str(datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc, microsecond=0).isoformat())
-ocp_subsystem["access_urls"] = [
-  {
-    "title": "Web Console",
-    "url": f"https://console-openshift-console.apps.{engagement['ocp_sub_domain']}.{region_url}.{context['ocp_base_url']}"
-  },
-  {
-    "title": "API",
-    "url": f"https://api.{engagement['ocp_sub_domain']}.{region_url}.{context['ocp_base_url']}:6443"
-  }
-]
+#####################################################################################################################
+# Right now, the only supported configuration is a list of one hosting environment. 
+# In the near future, this should be updated to support more than one, and this comment (and the code below)
+# should be updated to support this. For now, this checking is just looking for more than zero hosting environments,
+# but will default to use the value(s) from the first one.
 
-if current_state == "provisioning":
-  ocp_subsystem["status"] = "yellow"
-  ocp_subsystem["info"] = "Building Cluster. This normally takes about ~45 min from launch. Please check back later for an updated status."
-elif current_state == desired_state or (current_state == "started" and desired_state is None):
-  ocp_subsystem["status"] = "green"
-  ocp_subsystem["info"] = "Working as expected"
-else:
-  ocp_subsystem["status"] = "yellow"
-  ocp_subsystem["info"] = "Contact SRE team"
+if 'hosting_environments' in engagement and len(engagement['hosting_environments']) > 0:
+  ocp_subsystem["state"] = current_state
+  ocp_subsystem["updated"] = str(datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc, microsecond=0).isoformat())
+  ocp_subsystem["access_urls"] = [
+    {
+      "title": "Web Console",
+      "url": f"https://console-openshift-console.apps.{engagement['hosting_environments'][0]['ocp_sub_domain']}.{region_url}.{context['ocp_base_url']}"
+    },
+    {
+      "title": "API",
+      "url": f"https://api.{engagement['hosting_environments'][0]['ocp_sub_domain']}.{region_url}.{context['ocp_base_url']}:6443"
+    }
+  ]
 
-status["overall_status"] = ocp_subsystem["status"]
+  if current_state == "provisioning":
+    ocp_subsystem["status"] = "yellow"
+    ocp_subsystem["info"] = "Building Hosting Environment. This normally takes about 45-60 min from launch. Please check back later for an updated status."
+  elif current_state == desired_state or (current_state == "started" and desired_state is None):
+    ocp_subsystem["status"] = "green"
+    ocp_subsystem["info"] = "Working as expected"
+  else:
+    ocp_subsystem["status"] = "yellow"
+    ocp_subsystem["info"] = "Contact SRE team"
+
+status["overall_status"] = ocp_subsystem["status"] 
 status["subsystems"].append(ocp_subsystem)
 
 with open(f"../../{subject['directory']}/status.json", 'w') as fp:
