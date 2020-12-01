@@ -45,10 +45,11 @@ desired_state = subject["ocp_anarchy_subject"]["spec"]["vars"]["desired_state"] 
 region = engagement["engagement_region"].lower() if "engagement_region" in engagement else "dev"
 region_url = f"{region}-1"
 
-#############################################################################################################
+#####################################################################################################################
 # Right now, the only supported configuration is a list of one hosting environment. 
 # In the near future, this should be updated to support more than one, and this comment (and the code below)
-# should be updated to support this. For now, this checking is just looking for none/one hosting environment.
+# should be updated to support this. For now, this checking is just looking for more than zero hosting environments,
+# but will default to use the value(s) from the first one.
 
 if 'hosting_environments' in engagement and len(engagement['hosting_environments']) > 0:
   ocp_subsystem["state"] = current_state
