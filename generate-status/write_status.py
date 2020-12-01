@@ -50,17 +50,17 @@ region_url = f"{region}-1"
 # In the near future, this should be updated to support more than one, and this comment (and the code below)
 # should be updated to support this. For now, this checking is just looking for none/one hosting environment.
 
-if 'hosting_environemnts' in engagement and len(engagement['hosting_environemnts']) > 0:
+if 'hosting_environments' in engagement and len(engagement['hosting_environments']) > 0:
   ocp_subsystem["state"] = current_state
   ocp_subsystem["updated"] = str(datetime.datetime.utcnow().replace(tzinfo=datetime.timezone.utc, microsecond=0).isoformat())
   ocp_subsystem["access_urls"] = [
     {
       "title": "Web Console",
-      "url": f"https://console-openshift-console.apps.{engagement['hosting_environemnts'][0]['ocp_sub_domain']}.{region_url}.{context['ocp_base_url']}"
+      "url": f"https://console-openshift-console.apps.{engagement['hosting_environments'][0]['ocp_sub_domain']}.{region_url}.{context['ocp_base_url']}"
     },
     {
       "title": "API",
-      "url": f"https://api.{engagement['hosting_environemnts'][0]['ocp_sub_domain']}.{region_url}.{context['ocp_base_url']}:6443"
+      "url": f"https://api.{engagement['hosting_environments'][0]['ocp_sub_domain']}.{region_url}.{context['ocp_base_url']}:6443"
     }
   ]
 
