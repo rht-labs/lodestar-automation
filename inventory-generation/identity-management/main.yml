@@ -67,7 +67,7 @@
   - block:
     - name: "Set IDM facts"
       set_fact:
-        ipa_host: "{{ 'ipa.apps.' + (hosting_environments[0].ocp_sub_domain | lower) + '.' + engagement_region | default('dev-1') + '.' + ocp_base_url }}"
+        ipa_host: "{{ 'ipa.apps.' + (hosting_environments[0].ocp_sub_domain | lower) + '.' + engagement_region | default('dev') + '-1.' + ocp_base_url }}"
         ipa_admin_user: "{{ ocp_admin_username }}"
         ipa_admin_password: "{{ ocp_admin_password }}"
         ipa_validate_certs: "{{ ipa_validate_certs | default(true) }}"
