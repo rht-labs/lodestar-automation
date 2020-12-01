@@ -61,7 +61,7 @@ if 'hosting_environemnts' in engagement and len(engagement['hosting_environemnts
 
   if current_state == "provisioning":
     ocp_subsystem["status"] = "yellow"
-    ocp_subsystem["info"] = "Building Hosting Environment. This normally takes about ~45 min from launch. Please check back later for an updated status."
+    ocp_subsystem["info"] = "Building Hosting Environment. This normally takes about 45-60 min from launch. Please check back later for an updated status."
   elif current_state == desired_state or (current_state == "started" and desired_state is None):
     ocp_subsystem["status"] = "green"
     ocp_subsystem["info"] = "Working as expected"
