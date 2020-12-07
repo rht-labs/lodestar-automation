@@ -1,4 +1,5 @@
 ---
+
 - name: Generate admin password for OCP
   hosts: local
   gather_facts: false
@@ -27,5 +28,7 @@
         dest: "{{ ocp_credentials_file }}"
         content: "{{ {'ocp_admin_username':'admin','ocp_admin_password':ocp_password } | to_nice_json }}"
     when:
-      - r_ocp_credentials_file.stat.exists == False
-      - ocp_version is defined
+    - r_ocp_credentials_file.stat.exists == False
+    - hosting_environments is defined
+    - hosting_environments|length > 0
+    - hosting_environments[0].ocp_version is defined
