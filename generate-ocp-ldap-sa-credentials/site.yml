@@ -27,5 +27,7 @@
         dest: "{{ credentials_file }}"
         content: "{{ {'ocp_ldap_sa_username':'ldap-sa','ocp_ldap_sa_password':sa_password } | to_nice_json }}"
     when:
-      - r_credentials_file.stat.exists == False
-      - ocp_version is defined
+    - r_credentials_file.stat.exists == False
+    - hosting_environments is defined
+    - hosting_environments|length > 0
+    - hosting_environments[0].ocp_version is defined
