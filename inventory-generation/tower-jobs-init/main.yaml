@@ -1,0 +1,7 @@
+---
+- name: Generate ansible-tower scheduled notification inventory based off of engagement.json
+  hosts: local
+  gather_facts: false
+  roles:
+    - tower-jobs-init
+

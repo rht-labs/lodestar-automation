@@ -1,0 +1,25 @@
+---
+- name: "Fail If Working Directory Is Not Provided"
+  fail:
+    msg: "directory var needs to be provided in order to ensure a safe working directory"
+  when:
+    - directory is undefined or (directory | trim) == ""
+
+- name: Read Engagement Data
+  include_vars:
+    file: "{{ directory }}/engagement.json"
+
+- name: Residency Engagement Type inventory
+  block:
+    - name: "Create hosts file"
+      copy:
+        src: "hosts"
+        dest: "{{ directory }}/iac/inventories/tower-jobs-init/inventory/hosts"
+
+    - name: "Write to git inventory"
+      template:
+        src: "tower-jobs-init.yaml.j2"
+        dest: "{{ directory }}/iac/inventories/tower-jobs-init/inventory/group_vars/tower-management-host.yaml"
+
+  when: 
+    - engagement_type == 'Residency'

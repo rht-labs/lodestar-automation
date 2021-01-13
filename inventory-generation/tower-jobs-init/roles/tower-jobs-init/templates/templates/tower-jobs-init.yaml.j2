@@ -1,0 +1,43 @@
+#jinja2: trim_blocks:False
+---
+delete_missing_items: false
+
+ansible_tower:
+  url: "{{ ansible_tower_url }}"
+  admin_password: "{{ ansible_tower_admin_password }}"
+  projects:
+    - name: "{{ customer_name }} {{ project_name }} Project"
+      description: "{{ description }}"
+      organization: "{{ organization }}"
+      scm_type: "git"
+      scm_url: "{{ url }}"
+      scm_branch: "master"
+      scm_credential_name: "{{ scm_credential_name }}"
+      scm_update_on_launch: true
+  job_templates:
+    - name: "{{ customer_name }} {{ project_name }} Configure Ansible Tower"
+      description: "Job Template to configure Ansible Tower"
+      inventory: "{{ customer_name }} {{ project_name }} Inventory"
+      project: "infra-ansible"
+      playbook: "playbooks/ansible/tower/configure-ansible-tower.yml"
+      credential: ""
+      ask_variables_on_launch: true
+  inventories:
+    - name: "{{ customer_name }} {{ project_name }} Inventory"
+      variables: ""
+      organization: "{{ organization }}"
+      sources:
+        - name: "{{ customer_name }} {{ project_name }} Inventory Source"
+          description: "GitLab inventory source for the {{ customer_name }} {{ project_name }} engagement"
+          credential: "{{ scm_credential_name }}"
+          source: "scm"
+          source_project: "{{ customer_name }} {{ project_name }} Project"
+          source_path: "iac/inventories/tower-jobs-schedules/inventory/hosts"
+          update_on_launch: true
+          source_vars: |-
+            ---
+  schedules:
+    - name: "{{ customer_name }} {{ project_name }} Build Scheduled Notifications"
+      description: "Builds scheduled notification jobs"
+      rrule: "DTSTART:20060102T030405Z RRULE:FREQ=DAILY;INTERVAL=1"
+      unified_job_template: "{{ customer_name }} {{ project_name }} Configure Ansible Tower"

@@ -1,0 +1,35 @@
+---
+- name: Generate email notifications to be consumed by Ansible Tower scheduled jobs
+  hosts: local
+  gather_facts: false
+
+  tasks:
+    - name: "Fail If Working Directory Is Not Provided"
+      fail:
+        msg: "directory var needs to be provided in order to ensure a safe working directory"
+      when:
+        - directory is undefined or (directory | trim) == ""
+        - email_templates_directory is undefined or (email_templates_directory | trim) == ""
+
+    - name: Read Engagement Data
+      include_vars:
+        file: "{{ directory }}/engagement.json"
+        
+    - name: Check for existing email templates
+      stat:
+        path: "{{ directory }}/iac/inventories/notifications/group_vars/all/"
+      
+    - name: Copy email templates from main repo to engagement repo
+      block:
+        - name: "Copy email template directory to engagment repo"
+          copy:
+            src: "{{ email_templates_directory }}/hosting/residency/{{ language | default('en_us') }}/"
+            dest: "{{ directory }}/iac/inventories/notifications/group_vars/all/"
+        - name: "Create hosts file"
+          copy:
+            src: "hosts"
+            dest: "{{ directory }}/iac/inventories/notifications/inventory/hosts"
+
+      when: 
+        - engagement_type == 'Residency'
+
