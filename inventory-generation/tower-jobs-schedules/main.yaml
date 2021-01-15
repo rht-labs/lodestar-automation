@@ -1,6 +1,6 @@
 ---
 - name: Generate ansible-tower scheduled notification inventory based off of engagement.json
-  hosts: local
+  hosts: tower-jobs-schedules
   gather_facts: false
   tasks:
     - name: "Fail If Working Directory Is Not Provided"
