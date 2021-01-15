@@ -20,11 +20,7 @@
         start_date: "{{ (start_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
         end_date: "{{ (end_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
         env_end_date: "{{ (archive_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
-        env: "{{ (archive_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
         ipa_host: "{{ 'ipa.apps.' + (hosting_environments[0].ocp_sub_domain | lower) + '.' + engagement_region | default('dev-1') + '.' + ocp_base_url }}"
-        first_name: "first_name"
-        user_name: "user_name"
-        password: "password"
 
     - name: Check for existing email templates
       stat:
@@ -35,9 +31,9 @@
         - name: "Copy email template directory to engagment repo and process as jinja2"
           template:
             src: "{{ item }}"
-            dest: "{{ directory }}/iac/inventories/notifications/group_vars/all/{{ item | basename }}"
+            dest: "{{ directory }}/iac/inventories/notifications/group_vars/all/{{ item | basename | regex_replace('.j2$') }}"
           with_fileglob:
-            - "{{ email_templates_directory }}/hosting/residency/{{ language | default('en_us') }}/*"
+            - "{{ email_templates_directory }}/hosting/residency_templates/{{ language | default('en_us') }}/*"
 
         - name: "Create hosts file"
           copy:
