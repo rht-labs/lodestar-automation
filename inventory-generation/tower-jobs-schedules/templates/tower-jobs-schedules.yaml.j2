@@ -3,6 +3,7 @@
 start_date: "{{ (start_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
 end_date: "{{ (end_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
 archive_date: "{{ (archive_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
+
 delete_missing_items: false
 
 ansible_tower:
@@ -52,7 +53,7 @@ ansible_tower:
       rrule: "{{ start_date | parse_datetime | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
-      enabled: {{ enable_notifications | default(true) }}
+      enabled: {{ enable_notifications | default(false) }}
       extra_data:
         email_template: "{{ welcome_internal }}"
     - name: "{{ customer_name }} {{ project_name }} Welcome All"
@@ -61,7 +62,7 @@ ansible_tower:
       rrule: "{{ start_date | parse_datetime | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
-      enabled: {{ enable_notifications | default(true) }}
+      enabled: {{ enable_notifications | default(false) }}
       extra_data:
         email_template: "{{ welcome_all }}"
     - name: "{{ customer_name }} {{ project_name }} Pre-offboard"
@@ -70,7 +71,7 @@ ansible_tower:
       rrule: "{{ end_date | parse_datetime | subtract_time(weeks=1) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
-      enabled: {{ enable_notifications | default(true) }}
+      enabled: {{ enable_notifications | default(false) }}
       extra_data:
         email_template: "{{ pre_offboard }}"
     - name: "{{ customer_name }} {{ project_name }} Offboard 1"
@@ -79,7 +80,7 @@ ansible_tower:
       rrule: "{{ end_date | parse_datetime | add_time(days=3) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
-      enabled: {{ enable_notifications | default(true) }}
+      enabled: {{ enable_notifications | default(false) }}
       extra_data:
         email_template: "{{ offboard_1 }}"
     - name: "{{ customer_name }} {{ project_name }} Offboard 2"
@@ -88,7 +89,7 @@ ansible_tower:
       rrule: "{{ archive_date | parse_datetime | subtract_time(weeks=3) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
-      enabled: {{ enable_notifications | default(true) }}
+      enabled: {{ enable_notifications | default(false) }}
       extra_data:
         email_template: "{{ offboard_2 }}"
     - name: "{{ customer_name }} {{ project_name }} Offboard 3"
@@ -97,7 +98,7 @@ ansible_tower:
       rrule: "{{ archive_date | parse_datetime | subtract_time(weeks=2) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
-      enabled: {{ enable_notifications | default(true) }}
+      enabled: {{ enable_notifications | default(false) }}
       extra_data:
         email_template: "{{ offboard_3 }}"
     - name: "{{ customer_name }} {{ project_name }} Shutoff"
@@ -106,7 +107,7 @@ ansible_tower:
       rrule: "{{ archive_date | parse_datetime | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
-      enabled: {{ enable_notifications | default(true) }}
+      enabled: {{ enable_notifications | default(false) }}
       extra_data:
         email_template: "{{ shutoff }}"
 
