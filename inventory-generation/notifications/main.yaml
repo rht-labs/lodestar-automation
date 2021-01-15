@@ -21,9 +21,9 @@
         end_date: "{{ (end_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
         env_end_date: "{{ (archive_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
         ipa_host: "{{ 'ipa.apps.' + (hosting_environments[0].ocp_sub_domain | lower) + '.' + engagement_region | default('dev-1') + '.' + ocp_base_url }}"
-        first_name: '{% raw %}{{ first_name }}{% endraw %}'
-        user_name: '{% raw %}{{ user_name }}{% endraw %}'
-        password: '{% raw %}{{ password }}{% endraw %}'
+        first_name: '{% raw %}"{{ first_name }}"{% endraw %}'
+        user_name: '{% raw %}"{{ user_name }}"{% endraw %}'
+        password: '{% raw %}"{{ password }}"{% endraw %}'
 
     - name: Check for existing email templates
       stat:
