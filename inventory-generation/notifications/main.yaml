@@ -2,6 +2,12 @@
 - name: Generate email notifications to be consumed by Ansible Tower scheduled jobs
   hosts: local
   gather_facts: false
+  
+  vars:
+    start_date: "{{ (start_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
+    end_date: "{{ (end_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
+    archive_date: "{{ (archive_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
+    ipa_host: "{{ 'ipa.apps.' + (ocp_sub_domain | lower) + '.' + engagement_region | default('dev-1') + '.' + ocp_base_url }}"
 
   tasks:
     - name: "Fail If Working Directory Is Not Provided"
@@ -21,10 +27,13 @@
       
     - name: Copy email templates from main repo to engagement repo
       block:
-        - name: "Copy email template directory to engagment repo"
-          copy:
-            src: "{{ email_templates_directory }}/hosting/residency/{{ language | default('en_us') }}/"
-            dest: "{{ directory }}/iac/inventories/notifications/group_vars/all/"
+        - name: "Copy email template directory to engagment repo and process as jinja2"
+          template:
+            src: "{{ item }}"
+            dest: "{{ directory }}/iac/inventories/notifications/group_vars/all/{{ item }}"
+          with_fileglob:
+            - "{{ email_templates_directory }}/hosting/residency/{{ language | default('en_us') }}/*"
+
         - name: "Create hosts file"
           copy:
             src: "hosts"
