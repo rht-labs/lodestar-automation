@@ -20,7 +20,7 @@
         start_date: "{{ (start_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
         end_date: "{{ (end_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
         archive_date: "{{ (archive_date | regex_replace('^(.*)T.*$', '\\1') | to_datetime('%Y-%m-%d')).strftime('%d %b %Y') }}"
-        ipa_host: "{{ 'ipa.apps.' + (ocp_sub_domain | lower) + '.' + engagement_region | default('dev-1') + '.' + ocp_base_url }}"
+        ipa_host: "{{ 'ipa.apps.' + (hosting_environments[0].ocp_sub_domain | lower) + '.' + engagement_region | default('dev-1') + '.' + ocp_base_url }}"
 
     - name: Check for existing email templates
       stat:
