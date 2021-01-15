@@ -33,7 +33,7 @@
             src: "{{ item }}"
             dest: "{{ directory }}/iac/inventories/notifications/group_vars/all/{{ item | basename | regex_replace('.j2$') }}"
           with_fileglob:
-            - "{{ email_templates_directory }}/hosting/residency_templates/{{ language | default('en_us') }}/*"
+            - "{{ email_templates_directory }}/hosting/template_generation/residency/{{ language | default('en_us') }}/*"
 
         - name: "Create hosts file"
           copy:
