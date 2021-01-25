@@ -25,7 +25,7 @@
     - name: Check for existing email templates
       stat:
         path: "{{ directory }}/iac/inventories/notifications/group_vars/all/"
-      register: st
+      register: alldir
         
     - name: Copy email templates from main repo to engagement repo
       block:
@@ -46,7 +46,6 @@
             dest: "{{ directory }}/iac/inventories/notifications/inventory/hosts"
 
       when: 
-        - st.stat.isdir is defined
-        - st.stat.isdir exists
+        - alldir.stat.isdir is not defined
         - engagement_type == 'Residency' 
 
