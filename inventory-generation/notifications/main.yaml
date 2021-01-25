@@ -25,7 +25,7 @@
     - name: Check for existing email templates
       stat:
         path: "{{ directory }}/iac/inventories/notifications/group_vars/all/"
-      register: alldir
+      register: notifications_dir
         
     - name: Copy email templates from main repo to engagement repo
       block:
@@ -33,6 +33,7 @@
           file:
             path: "{{ directory }}/iac/inventories/notifications/group_vars/all/"
             state: directory
+
         - name: "Copy email template directory to engagment repo and process as jinja2"
           template:
             src: "{{ item }}"
@@ -46,6 +47,6 @@
             dest: "{{ directory }}/iac/inventories/notifications/inventory/hosts"
 
       when: 
-        - alldir.stat.isdir is not defined
+        - notifications_dir.stat.isdir is not defined
         - engagement_type == 'Residency' 
 
