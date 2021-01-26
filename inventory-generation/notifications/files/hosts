@@ -2,11 +2,11 @@
 ansible_connection=local
 
 [mail-host]
-offboard_1
-offboard_2
-offboard_3
+offboard-1
+offboard-2
+offboard-3
 onboard
-pre_offboard
+pre-offboard
 shutoff
-welcome_all
-welcome_internal
+welcome-all
+welcome-internal
