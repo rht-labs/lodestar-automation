@@ -6,7 +6,6 @@ inventories:
 
 inventory_dirs:
   - group_vars
-  - group_vars/all
   - host_vars
 
 files:
