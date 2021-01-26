@@ -24,7 +24,7 @@
 
     - name: Check for existing email templates
       stat:
-        path: "{{ directory }}/iac/inventories/notifications/inventory/host_vars/"
+        path: "{{ directory }}/iac/inventories/notifications/inventory/host_vars"
       register: notifications_dir
       
     - name: Create user list for notifications
@@ -52,6 +52,6 @@
             dest: "{{ directory }}/iac/inventories/notifications/inventory/hosts"
 
       when: 
-        - notifications_dir.stat.isdir is not defined
+        #- notifications_dir.stat.isdir is not defined
         - engagement_type == 'Residency' 
 
