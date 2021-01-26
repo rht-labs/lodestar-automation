@@ -1,11 +1,4 @@
 
 # Mail hosts use Ansible groups to select the desired email template
-[mail-host:children]
-[offboard-1]
-[offboard-2]
-[offboard-3]
-[onboard]
-[pre-offboard]
-[shutoff]
-[welcome-all]
-[welcome-internal]
+[mail-host]
+localhost
