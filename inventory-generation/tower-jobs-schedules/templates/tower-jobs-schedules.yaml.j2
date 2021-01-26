@@ -10,12 +10,6 @@ ansible_tower:
   url: "{{ ansible_tower_url }}"
   admin_password: "{{ ansible_tower_admin_password }}"
   projects:
-    - name: "infra-ansible"
-      description: "Infra Ansible"
-      scm_type: "git"
-      scm_url: "https://github.com/paulbarfuss/infra-ansible.git"
-      scm_branch: "add-tower-schedule-module"
-      organization: "{{ organization }}"
     - name: "{{ customer_name }} {{ project_name }} Project"
       description: "{{ description }}"
       organization: "{{ organization }}"
@@ -25,8 +19,8 @@ ansible_tower:
       scm_credential_name: "{{ scm_credential_name }}"
       scm_update_on_launch: true
   job_templates:
-    - name: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
-      description: "Job Template to email a list of users"
+    - name: "Email and notify users - {{ customer_name }} {{ project_name }}"
+      description: "Job Template to send email notificaitons to users"
       inventory: "{{ customer_name }} {{ project_name }} Inventory"
       project: "infra-ansible"
       playbook: "playbooks/notifications/email-notify-users.yml"
