@@ -21,13 +21,13 @@ ansible_tower:
   job_templates:
     - name: "Email and notify users - {{ customer_name }} {{ project_name }}"
       description: "Job Template to send email notificaitons to users"
-      inventory: "{{ customer_name }} {{ project_name }} Inventory"
+      inventory: "{{ customer_name }} {{ project_name }} Notifications Inventory"
       project: "infra-ansible"
       playbook: "playbooks/notifications/email-notify-users.yml"
       credential: ""
       ask_variables_on_launch: true
   inventories:
-    - name: "{{ customer_name }} {{ project_name }} [mail-host] Inventory"
+    - name: "{{ customer_name }} {{ project_name }} Notifications Inventory"
       variables: ""
       organization: "{{ organization }}"
       sources:
