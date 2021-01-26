@@ -24,7 +24,7 @@
 
     - name: Check for existing email templates
       stat:
-        path: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all/"
+        path: "{{ directory }}/iac/inventories/notifications/inventory/host_vars/"
       register: notifications_dir
       
     - name: Create user list for notifications
@@ -34,15 +34,15 @@
         
     - name: Copy email templates from main repo to engagement repo
       block:
-        - name: Add directory for group vars all
+        - name: Add directory for host_vars
           file:
-            path: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all/"
+            path: "{{ directory }}/iac/inventories/notifications/inventory/host_vars"
             state: directory
 
         - name: "Copy email template directory to engagment repo and process as jinja2"
           template:
             src: "{{ item }}"
-            dest: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all/{{ item | basename | regex_replace('.j2$') }}"
+            dest: "{{ directory }}/iac/inventories/notifications/inventory/host_vars/{{ item | basename | regex_replace('.j2$') }}"
           with_fileglob:
             - "{{ email_templates_directory }}/hosting/residency/{{ language | default('en_us') }}/*.j2"
 

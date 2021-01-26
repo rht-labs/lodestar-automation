@@ -1,4 +1,12 @@
+[mail-host:vars]
+ansible_connection=local
 
-# Mail hosts use Ansible groups to select the desired email template
 [mail-host]
-localhost
+offboard_1
+offboard_2
+offboard_3
+onboard
+pre_offboard
+shutoff
+welcome_all
+welcome_internal
