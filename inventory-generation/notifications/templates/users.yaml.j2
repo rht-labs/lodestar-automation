@@ -1,3 +1,5 @@
 ---
 users:
-{{ engagement_users | to_nice_yaml }}
+{% for user in engagement_users -%}
+{{ user | list | to_nice_yaml | indent(2) }}
+{%- endfor %}
