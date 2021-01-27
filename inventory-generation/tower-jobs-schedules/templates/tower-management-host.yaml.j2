@@ -58,7 +58,7 @@ ansible_tower:
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
       enabled: {{ enable_notifications | default(false) }}
-      limit: welcome_internal
+      limit: welcome-internal
     - name: "{{ customer_name }} {{ project_name }} Welcome All"
       description: "Welcome notification for {{ company_name }} and {{ customer_name }}"
       {% raw -%}
