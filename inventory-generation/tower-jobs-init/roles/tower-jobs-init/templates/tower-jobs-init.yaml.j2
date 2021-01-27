@@ -20,7 +20,7 @@ ansible_tower:
       inventory: "{{ customer_name }} {{ project_name }} Inventory"
       project: "infra-ansible"
       playbook: "playbooks/ansible/tower/configure-ansible-tower.yml"
-      credential: ""
+      credential: "{{ scm_credential_name }}"
       ask_variables_on_launch: true
   inventories:
     - name: "{{ customer_name }} {{ project_name }} Inventory"
