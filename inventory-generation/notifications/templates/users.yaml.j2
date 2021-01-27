@@ -2,5 +2,5 @@
 ---
 list_of_users:
 {% for user in engagement_users %}
-  - {{ user.email | trim }}
-{% endfor %}
+  - {{ user | to_nice_yaml | indent(4, false) }}
+{%- endfor %}

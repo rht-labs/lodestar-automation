@@ -24,8 +24,8 @@ ansible_tower:
       inventory: "{{ customer_name }} {{ project_name }} Notifications Inventory"
       project: "infra-ansible"
       playbook: "playbooks/notifications/email-notify-list-of-users.yml"
-      credential: "{{ scm_credential_name }}"
       ask_variables_on_launch: true
+      ask_limit_on_launch: true
   inventories:
     - name: "{{ customer_name }} {{ project_name }} Notifications Inventory"
       variables: ""
@@ -58,7 +58,7 @@ ansible_tower:
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
       enabled: {{ enable_notifications | default(false) }}
-      limit: mail-host,welcome_internal
+      limit: welcome_internal
     - name: "{{ customer_name }} {{ project_name }} Welcome All"
       description: "Welcome notification for {{ company_name }} and {{ customer_name }}"
       {% raw -%}
@@ -66,7 +66,7 @@ ansible_tower:
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
       enabled: {{ enable_notifications | default(false) }}
-      limit: mail-host,welcome_all
+      limit: welcome-all
     - name: "{{ customer_name }} {{ project_name }} Pre-offboard"
       description: "Pre-offboard"
       {% raw -%}
@@ -74,7 +74,7 @@ ansible_tower:
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
       enabled: {{ enable_notifications | default(false) }}
-      limit: mail-host,pre_offboard
+      limit: pre-offboard
     - name: "{{ customer_name }} {{ project_name }} Offboard 1"
       description: "Offboard 1"
       {% raw -%}
@@ -82,7 +82,7 @@ ansible_tower:
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
       enabled: {{ enable_notifications | default(false) }}
-      limit: mail-host,offboard_1
+      limit: offboard-1
     - name: "{{ customer_name }} {{ project_name }} Offboard 2"
       description: "Offboard 2"
       {% raw -%}
@@ -90,7 +90,7 @@ ansible_tower:
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
       enabled: {{ enable_notifications | default(false) }}
-      limit: mail-host,offboard_2
+      limit: offboard-2
     - name: "{{ customer_name }} {{ project_name }} Offboard 3"
       description: "Offboard 3"
       {% raw -%}
@@ -98,7 +98,7 @@ ansible_tower:
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
       enabled: {{ enable_notifications | default(false) }}
-      limit: mail-host,offboard_3
+      limit: offboard-3
     - name: "{{ customer_name }} {{ project_name }} Shutoff"
       description: "Shutoff e-mail for the {{ customer_name }} {{ project_name }}} engagement"
       {% raw -%}
@@ -106,4 +106,4 @@ ansible_tower:
       {%- endraw %}
       unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
       enabled: {{ enable_notifications | default(false) }}
-      limit: mail-host,shutoff
+      limit: shutoff
