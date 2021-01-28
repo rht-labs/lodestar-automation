@@ -1,12 +1,2 @@
-[mail-host:vars]
-ansible_connection=local
-
 [mail-host]
-offboard-1
-offboard-2
-offboard-3
-onboard
-pre-offboard
-shutoff
-welcome-all
-welcome-internal
+ansible_connection=local
