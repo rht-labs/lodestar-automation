@@ -10,7 +10,7 @@ ansible_tower:
   url: "{{ ansible_tower_url }}"
   admin_password: "{{ ansible_tower_admin_password }}"
   projects:
-    - name: "{{ customer_name }} {{ project_name }} Project"
+    - name: "{{ customer_engagement }}-project"
       description: "{{ description }}"
       organization: "{{ organization }}"
       scm_type: "git"
@@ -19,28 +19,28 @@ ansible_tower:
       scm_credential_name: "{{ scm_credential_name }}"
       scm_update_on_launch: true
   job_templates:
-    - name: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
+    - name: "email-notify-list-of-users"
       description: "Job Template to send email notificaitons to users"
-      inventory: "{{ customer_name }} {{ project_name }} Notifications Inventory"
+      inventory: "empty-inventory-dev"
       project: "infra-ansible"
       playbook: "playbooks/notifications/email-notify-list-of-users.yml"
       ask_variables_on_launch: true
-      ask_limit_on_launch: true
+      ask_inventory_on_launch: true
   inventories:
-    - name: "{{ customer_name }} {{ project_name }} Notifications Inventory"
+    - name: "{{ customer_engagement }}-notifications-inventory"
       variables: ""
       organization: "{{ organization }}"
       sources:
-        - name: "{{ customer_name }} {{ project_name }} Notifications Source"
-          description: "GitLab inventory source for the {{ customer_name }} {{ project_name }} engagement"
+        - name: "{{ customer_engagement }}-notifications-source"
+          description: "GitLab inventory source for the {{ customer_engagement }} engagement"
           credential: "{{ scm_credential_name }}"
           source: "scm"
-          source_project: "{{ customer_name }} {{ project_name }} Project"
+          source_project: "{{ customer_engagement }}-project"
           source_path: "iac/inventories/notifications/inventory/hosts"
           update_on_launch: true
           source_vars: |-
             ---
-        - name: "{{ customer_name }} {{ project_name }} Mail Host Credentials Source"
+        - name: "{{ customer_engagement }}-mail-host-credentials-source"
           description: "Email credentials for infra-ansible/mail-host"
           credential: "{{ scm_credential_name }}"
           source_project: "rht-labs-credentials-dev"
@@ -51,59 +51,81 @@ ansible_tower:
             ---
 
   schedules:
-    - name: "{{ customer_name }} {{ project_name }} Welcome Internal"
+    - name: "{{ customer_engagement }}-welcome-internal"
       description: "Welcome Internal for internal {{ company_name }} engagement members"
       {% raw -%}
       rrule: "{{ start_date | parse_datetime | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
+      unified_job_template: "email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
-      limit: welcome-internal
-    - name: "{{ customer_name }} {{ project_name }} Welcome All"
+      inventory: "{{ customer_engagement }}-notifications-inventory"
+      extra_data:
+        body: {% raw %}"{{ welcome_internal.body }}"{% endraw %}
+        title: {% raw %}"{{ welcome_internal.title }}"{% endraw %}
+        users: {% raw %}"{{ welcome_internal.users }}"{% endraw %}
+    - name: "{{ customer_engagement }}-welcome-all"
       description: "Welcome notification for {{ company_name }} and {{ customer_name }}"
       {% raw -%}
       rrule: "{{ start_date | parse_datetime | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
+      unified_job_template: "email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
-      limit: welcome-all
-    - name: "{{ customer_name }} {{ project_name }} Pre-offboard"
+      extra_data:
+        body: {% raw %}"{{ welcome_all.body }}"{% endraw %}
+        title: {% raw %}"{{ welcome_all.title }}"{% endraw %}
+        users: {% raw %}"{{ welcome_all.users }}"{% endraw %}
+    - name: "{{ customer_engagement }}-pre-offboard"
       description: "Pre-offboard"
       {% raw -%}
       rrule: "{{ end_date | parse_datetime | subtract_time(weeks=1) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
+      unified_job_template: "email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
-      limit: pre-offboard
-    - name: "{{ customer_name }} {{ project_name }} Offboard 1"
+      extra_data:
+        body: {% raw %}"{{ pre_offboard.body }}"{% endraw %}
+        title: {% raw %}"{{ pre_offboard.title }}"{% endraw %}
+        users: {% raw %}"{{ pre_offboard.users }}"{% endraw %}
+    - name: "{{ customer_engagement }}-offboard-1"
       description: "Offboard 1"
       {% raw -%}
       rrule: "{{ end_date | parse_datetime | add_time(days=3) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
+      unified_job_template: "email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
-      limit: offboard-1
-    - name: "{{ customer_name }} {{ project_name }} Offboard 2"
+      extra_data:
+        body: {% raw %}"{{ offboard_1.body }}"{% endraw %}
+        title: {% raw %}"{{ offboard_1.title }}"{% endraw %}
+        users: {% raw %}"{{ offboard_1.users }}"{% endraw %}
+    - name: "{{ customer_engagement }}-offboard-2"
       description: "Offboard 2"
       {% raw -%}
       rrule: "{{ archive_date | parse_datetime | subtract_time(weeks=3) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
+      unified_job_template: "email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
-      limit: offboard-2
-    - name: "{{ customer_name }} {{ project_name }} Offboard 3"
+      extra_data:
+        body: {% raw %}"{{ offboard_2.body }}"{% endraw %}
+        title: {% raw %}"{{ offboard_2.title }}"{% endraw %}
+        users: {% raw %}"{{ offboard_2.users }}"{% endraw %}
+    - name: "{{ customer_engagement }}-offboard-3"
       description: "Offboard 3"
       {% raw -%}
       rrule: "{{ archive_date | parse_datetime | subtract_time(weeks=2) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
+      unified_job_template: "email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
-      limit: offboard-3
-    - name: "{{ customer_name }} {{ project_name }} Shutoff"
-      description: "Shutoff e-mail for the {{ customer_name }} {{ project_name }}} engagement"
+      extra_data:
+        body: {% raw %}"{{ offboard_3.body }}"{% endraw %}
+        title: {% raw %}"{{ offboard_3.title }}"{% endraw %}
+        users: {% raw %}"{{ offboard_3.users }}"{% endraw %}
+    - name: "{{ customer_engagement }}-shutoff"
+      description: "Shutoff e-mail for the {{ customer_engagement }}} engagement"
       {% raw -%}
       rrule: "{{ archive_date | parse_datetime | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "Email and notify list of users - {{ customer_name }} {{ project_name }}"
+      unified_job_template: "email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
-      limit: shutoff
+      extra_data:
+        body: {% raw %}"{{ shutoff.body }}"{% endraw %}
+        title: {% raw %}"{{ shutoff.title }}"{% endraw %}
+        users: {% raw %}"{{ shutoff.users }}"{% endraw %}

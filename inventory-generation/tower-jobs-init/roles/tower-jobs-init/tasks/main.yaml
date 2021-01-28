@@ -9,6 +9,10 @@
   include_vars:
     file: "{{ directory }}/engagement.json"
 
+- name: Combine customer and engagement name
+  set_fact:
+    customer_engagement: "{{ customer_name | lower | replace(' ', '_') }}-{{ project_name | lower | replace(' ', '_') }}"
+
 - name: Residency Engagement Type inventory
   block:
     - name: "Create hosts file"
