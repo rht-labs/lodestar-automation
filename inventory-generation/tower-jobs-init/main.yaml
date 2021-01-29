@@ -25,7 +25,7 @@
     - name: "Create the {{ customer_engagement }}-project"
       tower_project:    
         name: "{{ customer_engagement }}-project"
-        description: "Project for {{ customer_engagement }}"
+        description: "Create project for {{ customer_engagement }}"
         organization: "{{ organization }}"
         scm_type: "git"
         scm_url: "{{ url }}"
@@ -34,14 +34,14 @@
         scm_update_on_launch: true
         state: present
       
-    - name: Create an inventory for {{ customer_engagement }}
+    - name: "Create an inventory for {{ customer_engagement }}"
       tower_inventory:
         name: "{{ customer_engagement }}-tower-jobs-init"
         description: "Inventory for {{ customer_engagement }}"
         organization: "{{ organization }}"
         state: present
 
-    - name: Add an inventory source
+    - name: "Add an inventory source with notification templates for {{ customer_engagement }}"
       tower_inventory_source:
         name: "{{ customer_engagement }}-notifications"
         description: Source for {{ customer_engagement }}-notifications
@@ -53,7 +53,7 @@
         update_on_launch: yes
         state: present
 
-    - name: Add an inventory source
+    - name: "Add an inventory source to initialize scheduled notifications for {{ customer_engagement }}"
       tower_inventory_source:
         name: "{{ customer_engagement }}-tower-jobs-schedules"
         description: Source for {{ customer_engagement }}-schedules
@@ -65,7 +65,7 @@
         update_on_launch: yes
         state: present
 
-    - name: Create job template
+    - name: Create generic job template to configure Tower
       tower_job_template:
         name: "configure-ansible-tower"
         job_type: "run"
@@ -75,7 +75,13 @@
         ask_inventory: yes
         state: "present"
 
-    - name: Launch a job with inventory and credential
+    - name: "Launch job to configure Tower for {{ customer_engagement }}"
       tower_job_launch:
         job_template: "configure-ansible-tower"
         inventory: "{{ customer_engagement }}-tower-jobs-init"
+      register: job
+      
+    - name: "Print job ID details"
+      debug:
+        msg: "Job launched to configure Tower for {{ customer_engagement }}: {{ job.id }}"
+      
