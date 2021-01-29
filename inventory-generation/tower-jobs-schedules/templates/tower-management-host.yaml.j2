@@ -21,21 +21,30 @@ ansible_tower:
   job_templates:
     - name: "{{ customer_engagement }}-email-notify-list-of-users"
       description: "Job Template to send email notificaitons to users"
-      inventory: "{{ customer_engagement }}-tower-jobs-schedules"
+      inventory: "{{ customer_engagement }}-tower-mail-host"
       project: "infra-ansible"
       playbook: "playbooks/notifications/email-notify-list-of-users.yml"
       ask_variables_on_launch: true
   inventories:
-    - name: "{{ customer_engagement }}-tower-jobs-schedules"
+    - name: "{{ customer_engagement }}-tower-mail-host"
       variables: ""
       organization: "{{ organization }}"
       sources:
-        - name: "{{ customer_engagement }}-mail-host-credentials-source"
+        - name: "{{ customer_engagement }}-mail-host-credentials"
           description: "Email credentials for infra-ansible/mail-host"
           credential: "{{ scm_credential_name }}"
           source_project: "rht-labs-credentials-dev"
           source: "scm"
           source_path: "redhat.com/inventory/hosts"
+          update_on_launch: true
+          source_vars: |-
+            ---
+        - name: "{{ customer_engagement }}-notification-templates"
+          description: "Notification templates for {{ customer_engagement }}"
+          credential: "{{ scm_credential_name }}"
+          source_project: "{{ customer_engagement }}-project"
+          source: "scm"
+          source_path: "iac/inventories/notifications/inventory/hosts"
           update_on_launch: true
           source_vars: |-
             ---
