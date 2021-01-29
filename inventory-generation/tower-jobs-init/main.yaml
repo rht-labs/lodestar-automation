@@ -53,8 +53,24 @@
 
     - name: Add an inventory source
       tower_inventory_source:
-        name: "{{ customer_engagement }}-inventory-source"
-        description: Source for {{ customer_engagement }}-inventory
+        name: "{{ customer_engagement }}-notifications-source"
+        description: Source for {{ customer_engagement }}-notifications
+        inventory: "{{ customer_engagement }}-inventory"
+        source: scm
+        source_project: "{{ customer_engagement }}-project"
+        credential: "{{ scm_credential_name }}"
+        source_path: iac/inventories/notifications/inventory
+        update_on_launch: yes
+        tower_host: "{{ conf.tower_host }}"
+        tower_password: "{{ conf.tower_password }}"
+        tower_username: "{{ conf.tower_username }}"
+        validate_certs: "{{ conf.validate_certs }}"
+        state: present
+
+    - name: Add an inventory source
+      tower_inventory_source:
+        name: "{{ customer_engagement }}-schedules-source"
+        description: Source for {{ customer_engagement }}-schedules
         inventory: "{{ customer_engagement }}-inventory"
         source: scm
         source_project: "{{ customer_engagement }}-project"
