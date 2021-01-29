@@ -19,13 +19,12 @@ ansible_tower:
       scm_credential_name: "{{ scm_credential_name }}"
       scm_update_on_launch: true
   job_templates:
-    - name: "email-notify-list-of-users"
+    - name: "{{ customer_engagement }}-email-notify-list-of-users"
       description: "Job Template to send email notificaitons to users"
-      inventory: "empty-inventory-dev"
+      inventory: "{{ customer_engagement }}-notifications-inventory"
       project: "infra-ansible"
       playbook: "playbooks/notifications/email-notify-list-of-users.yml"
       ask_variables_on_launch: true
-      ask_inventory_on_launch: true
   inventories:
     - name: "{{ customer_engagement }}-notifications-inventory"
       variables: ""
@@ -56,7 +55,7 @@ ansible_tower:
       {% raw -%}
       rrule: "{{ start_date | parse_datetime | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "email-notify-list-of-users"
+      unified_job_template: "{{ customer_engagment }}-email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
       inventory: "{{ customer_engagement }}-notifications-inventory"
       extra_data:
@@ -68,7 +67,7 @@ ansible_tower:
       {% raw -%}
       rrule: "{{ start_date | parse_datetime | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "email-notify-list-of-users"
+      unified_job_template: "{{ customer_engagment }}-email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
       extra_data:
         body: {% raw %}"{{ welcome_all.body }}"{% endraw %}
@@ -79,7 +78,7 @@ ansible_tower:
       {% raw -%}
       rrule: "{{ end_date | parse_datetime | subtract_time(weeks=1) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "email-notify-list-of-users"
+      unified_job_template: "{{ customer_engagment }}-email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
       extra_data:
         body: {% raw %}"{{ pre_offboard.body }}"{% endraw %}
@@ -90,7 +89,7 @@ ansible_tower:
       {% raw -%}
       rrule: "{{ end_date | parse_datetime | add_time(days=3) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "email-notify-list-of-users"
+      unified_job_template: "{{ customer_engagment }}-email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
       extra_data:
         body: {% raw %}"{{ offboard_1.body }}"{% endraw %}
@@ -101,7 +100,7 @@ ansible_tower:
       {% raw -%}
       rrule: "{{ archive_date | parse_datetime | subtract_time(weeks=3) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "email-notify-list-of-users"
+      unified_job_template: "{{ customer_engagment }}-email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
       extra_data:
         body: {% raw %}"{{ offboard_2.body }}"{% endraw %}
@@ -112,7 +111,7 @@ ansible_tower:
       {% raw -%}
       rrule: "{{ archive_date | parse_datetime | subtract_time(weeks=2) | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "email-notify-list-of-users"
+      unified_job_template: "{{ customer_engagment }}-email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
       extra_data:
         body: {% raw %}"{{ offboard_3.body }}"{% endraw %}
@@ -123,7 +122,7 @@ ansible_tower:
       {% raw -%}
       rrule: "{{ archive_date | parse_datetime | to_rrule(freq=3, interval=1, count=1) }}"
       {%- endraw %}
-      unified_job_template: "email-notify-list-of-users"
+      unified_job_template: "{{ customer_engagment }}-email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
       extra_data:
         body: {% raw %}"{{ shutoff.body }}"{% endraw %}
