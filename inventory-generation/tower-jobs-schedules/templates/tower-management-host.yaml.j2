@@ -30,15 +30,6 @@ ansible_tower:
       variables: ""
       organization: "{{ organization }}"
       sources:
-        - name: "{{ customer_engagement }}-notifications-source"
-          description: "GitLab inventory source for the {{ customer_engagement }} engagement"
-          credential: "{{ scm_credential_name }}"
-          source: "scm"
-          source_project: "{{ customer_engagement }}-project"
-          source_path: "iac/inventories/notifications/inventory/hosts"
-          update_on_launch: true
-          source_vars: |-
-            ---
         - name: "{{ customer_engagement }}-mail-host-credentials-source"
           description: "Email credentials for infra-ansible/mail-host"
           credential: "{{ scm_credential_name }}"
