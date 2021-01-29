@@ -57,7 +57,6 @@ ansible_tower:
       {%- endraw %}
       unified_job_template: "{{ customer_engagement }}-email-notify-list-of-users"
       enabled: {{ enable_notifications | default(false) }}
-      inventory: "{{ customer_engagement }}-notifications-inventory"
       extra_data:
         body: {% raw %}"{{ welcome_internal.body }}"{% endraw %}
         title: {% raw %}"{{ welcome_internal.title }}"{% endraw %}
