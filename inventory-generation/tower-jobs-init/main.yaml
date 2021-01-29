@@ -24,13 +24,6 @@
       set_fact:
         customer_engagement: "{{ customer_name | lower | replace(' ', '_') }}-{{ project_name | lower | replace(' ', '_') }}"
 
-    - debug:
-        var: 
-          - tower_host
-          - tower_password
-          - tower_username
-          - validate_certs
-
     - name: "Create the {{ customer_engagement }}-project"
       tower_project:    
         name: "{{ customer_engagement }}-project"
@@ -81,7 +74,7 @@
         inventory: "empty-inventory-dev"
         project: "infra-ansible"
         playbook: "playbooks/ansible/tower/configure-ansible-tower.yml"
-        ask_inventory_on_launch: yes
+        ask_inventory: yes
         tower_host: "{{ conf.tower_host }}"
         tower_password: "{{ conf.tower_password }}"
         tower_username: "{{ conf.tower_username }}"
