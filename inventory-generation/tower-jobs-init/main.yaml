@@ -36,16 +36,16 @@
       
     - name: Create an inventory for {{ customer_engagement }}
       tower_inventory:
-        name: "{{ customer_engagement }}-inventory"
+        name: "{{ customer_engagement }}-tower-jobs-init"
         description: "Inventory for {{ customer_engagement }}"
         organization: "{{ organization }}"
         state: present
 
     - name: Add an inventory source
       tower_inventory_source:
-        name: "{{ customer_engagement }}-notifications-source"
+        name: "{{ customer_engagement }}-notifications"
         description: Source for {{ customer_engagement }}-notifications
-        inventory: "{{ customer_engagement }}-inventory"
+        inventory: "{{ customer_engagement }}-tower-jobs-init"
         source: scm
         source_project: "{{ customer_engagement }}-project"
         credential: "{{ scm_credential_name }}"
@@ -55,9 +55,9 @@
 
     - name: Add an inventory source
       tower_inventory_source:
-        name: "{{ customer_engagement }}-schedules-source"
+        name: "{{ customer_engagement }}-tower-jobs-schedules"
         description: Source for {{ customer_engagement }}-schedules
-        inventory: "{{ customer_engagement }}-inventory"
+        inventory: "{{ customer_engagement }}-tower-jobs-init"
         source: scm
         source_project: "{{ customer_engagement }}-project"
         credential: "{{ scm_credential_name }}"
@@ -69,7 +69,7 @@
       tower_job_template:
         name: "configure-ansible-tower"
         job_type: "run"
-        inventory: "empty-inventory-dev"
+        inventory: "empty-tower-jobs-init-dev"
         project: "infra-ansible"
         playbook: "playbooks/ansible/tower/configure-ansible-tower.yml"
         ask_inventory: yes
@@ -78,4 +78,4 @@
     - name: Launch a job with inventory and credential
       tower_job_launch:
         job_template: "configure-ansible-tower"
-        inventory: "{{ customer_engagement }}-inventory"
+        inventory: "{{ customer_engagement }}-tower-jobs-init"

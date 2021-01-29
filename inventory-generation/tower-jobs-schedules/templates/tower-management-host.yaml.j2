@@ -21,12 +21,12 @@ ansible_tower:
   job_templates:
     - name: "{{ customer_engagement }}-email-notify-list-of-users"
       description: "Job Template to send email notificaitons to users"
-      inventory: "{{ customer_engagement }}-notifications-inventory"
+      inventory: "{{ customer_engagement }}-tower-jobs-schedules"
       project: "infra-ansible"
       playbook: "playbooks/notifications/email-notify-list-of-users.yml"
       ask_variables_on_launch: true
   inventories:
-    - name: "{{ customer_engagement }}-notifications-inventory"
+    - name: "{{ customer_engagement }}-tower-jobs-schedules"
       variables: ""
       organization: "{{ organization }}"
       sources:
