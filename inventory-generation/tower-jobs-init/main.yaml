@@ -69,7 +69,7 @@
       tower_job_template:
         name: "configure-ansible-tower"
         job_type: "run"
-        inventory: "empty-tower-inventory-dev"
+        inventory: "empty-inventory-dev"
         project: "infra-ansible"
         playbook: "playbooks/ansible/tower/configure-ansible-tower.yml"
         ask_inventory: yes
