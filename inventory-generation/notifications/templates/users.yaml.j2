@@ -1,6 +1,0 @@
-#jinja2: trim_blocks:True
----
-list_of_users:
-{% for user in engagement_users %}
-  - {{ user | to_nice_yaml | indent(4, false) }}
-{%- endfor %}

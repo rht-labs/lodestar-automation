@@ -27,11 +27,6 @@
         path: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all"
       register: notifications_dir
       
-    # - name: Create user list for notifications
-    #   template:
-    #     src: users.yaml.j2
-    #     dest: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/mail-host.yaml"
-        
     - name: Copy email templates from main repo to engagement repo
       block:
         - name: Add directory for group_vars/all
@@ -52,6 +47,5 @@
             dest: "{{ directory }}/iac/inventories/notifications/inventory/hosts"
 
       when: 
-        #- notifications_dir.stat.isdir is not defined
+        - notifications_dir.stat.isdir is not defined
         - engagement_type == 'Residency' 
-
