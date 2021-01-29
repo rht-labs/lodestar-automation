@@ -3,17 +3,10 @@
   hosts: tower-jobs-init
   gather_facts: false
   environment:
-    tower_host: "{{ ansible_tower_url }}"
-    tower_password: "{{ ansible_tower_admin_password }}"
-    tower_username: "{{ ansible_tower_admin_username | default('admin') }}"
-    validate_certs: "{{ ansible_tower_validate_certs | default(false) }}"
-
-  # vars:
-  #   conf:
-  #     tower_host: "{{ ansible_tower_url }}"
-  #     tower_password: "{{ ansible_tower_admin_password }}"
-  #     tower_username: "{{ ansible_tower_admin_username | default('admin') }}"
-  #     validate_certs: "{{ ansible_tower_validate_certs | default(false) }}"
+    TOWER_HOST: "{{ ansible_tower_url }}"
+    TOWER_PASSWORD: "{{ ansible_tower_admin_password }}"
+    TOWER_USERNAME: "{{ ansible_tower_admin_username | default('admin') }}"
+    TOWER_VERIFY_SSL: "{{ ansible_tower_validate_certs | default(false) }}"
 
   tasks:
     - name: "Fail If Working Directory Is Not Provided"
