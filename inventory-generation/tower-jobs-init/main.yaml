@@ -83,5 +83,5 @@
       
     - name: "Print job ID details"
       debug:
-        msg: "Job launched to configure Tower for {{ customer_engagement }}: {{ job.id }}"
+        msg: "Job launched: {{ ansible_tower_url }}/#/jobs/playbook/{{ job.id }}"
       
