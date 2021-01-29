@@ -17,17 +17,17 @@ ansible_tower:
   job_templates:
     - name: "{{ customer_engagement }} Configure Ansible Tower"
       description: "Job Template to configure Ansible Tower"
-      inventory: "{{ customer_engagement }} Inventory"
+      inventory: "{{ customer_engagement }}-inventory"
       project: "infra-ansible"
       playbook: "playbooks/ansible/tower/configure-ansible-tower.yml"
       credential: "{{ scm_credential_name }}"
       ask_variables_on_launch: true
   inventories:
-    - name: "{{ customer_engagement }} Inventory"
+    - name: "{{ customer_engagement }}-inventory"
       variables: ""
       organization: "{{ organization }}"
       sources:
-        - name: "{{ customer_engagement }} Inventory Source"
+        - name: "{{ customer_engagement }}-inventory-source"
           description: "GitLab inventory source for the {{ customer_engagement }} engagement"
           credential: "{{ scm_credential_name }}"
           source: "scm"
