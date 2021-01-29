@@ -2,13 +2,18 @@
 - name: Initialize Ansible Tower scheduled notification project, job template, inventory and schedules
   hosts: tower-jobs-init
   gather_facts: false
+  environment:
+    tower_host: "{{ ansible_tower_url }}"
+    tower_password: "{{ ansible_tower_admin_password }}"
+    tower_username: "{{ ansible_tower_admin_username | default('admin') }}"
+    validate_certs: "{{ ansible_tower_validate_certs | default(false) }}"
 
-  vars:
-    conf:
-      tower_host: "{{ ansible_tower_url }}"
-      tower_password: "{{ ansible_tower_admin_password }}"
-      tower_username: "{{ ansible_tower_admin_username | default('admin') }}"
-      validate_certs: "{{ ansible_tower_validate_certs | default(false) }}"
+  # vars:
+  #   conf:
+  #     tower_host: "{{ ansible_tower_url }}"
+  #     tower_password: "{{ ansible_tower_admin_password }}"
+  #     tower_username: "{{ ansible_tower_admin_username | default('admin') }}"
+  #     validate_certs: "{{ ansible_tower_validate_certs | default(false) }}"
 
   tasks:
     - name: "Fail If Working Directory Is Not Provided"
@@ -34,10 +39,6 @@
         scm_branch: "master"
         scm_credential: "{{ scm_credential_name }}"
         scm_update_on_launch: true
-        tower_host: "{{ conf.tower_host }}"
-        tower_password: "{{ conf.tower_password }}"
-        tower_username: "{{ conf.tower_username }}"
-        validate_certs: "{{ conf.validate_certs }}"
         state: present
       
     - name: Create an inventory for {{ customer_engagement }}
@@ -45,10 +46,6 @@
         name: "{{ customer_engagement }}-inventory"
         description: "Inventory for {{ customer_engagement }}"
         organization: "{{ organization }}"
-        tower_host: "{{ conf.tower_host }}"
-        tower_password: "{{ conf.tower_password }}"
-        tower_username: "{{ conf.tower_username }}"
-        validate_certs: "{{ conf.validate_certs }}"
         state: present
 
     - name: Add an inventory source
@@ -61,10 +58,6 @@
         credential: "{{ scm_credential_name }}"
         source_path: iac/inventories/notifications/inventory
         update_on_launch: yes
-        tower_host: "{{ conf.tower_host }}"
-        tower_password: "{{ conf.tower_password }}"
-        tower_username: "{{ conf.tower_username }}"
-        validate_certs: "{{ conf.validate_certs }}"
         state: present
 
     - name: Add an inventory source
@@ -77,10 +70,6 @@
         credential: "{{ scm_credential_name }}"
         source_path: iac/inventories/tower-jobs-schedules/inventory
         update_on_launch: yes
-        tower_host: "{{ conf.tower_host }}"
-        tower_password: "{{ conf.tower_password }}"
-        tower_username: "{{ conf.tower_username }}"
-        validate_certs: "{{ conf.validate_certs }}"
         state: present
 
     - name: Create job template
@@ -91,18 +80,9 @@
         project: "infra-ansible"
         playbook: "playbooks/ansible/tower/configure-ansible-tower.yml"
         ask_inventory: yes
-        tower_host: "{{ conf.tower_host }}"
-        tower_password: "{{ conf.tower_password }}"
-        tower_username: "{{ conf.tower_username }}"
-        validate_certs: "{{ conf.validate_certs }}"
         state: "present"
 
     - name: Launch a job with inventory and credential
       tower_job_launch:
         job_template: "configure-ansible-tower"
         inventory: "{{ customer_engagement }}-inventory"
-        tower_host: "{{ conf.tower_host }}"
-        tower_password: "{{ conf.tower_password }}"
-        tower_username: "{{ conf.tower_username }}"
-        validate_certs: "{{ conf.validate_certs }}"
-      register: job
