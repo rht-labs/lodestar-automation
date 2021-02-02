@@ -4,9 +4,9 @@
   gather_facts: false
   
   tasks:
-    - name: "Fail If Working Directory Is Not Provided"
+    - name: "Fail if directory and email_templates_directory are not provided"
       fail:
-        msg: "directory var needs to be provided in order to ensure a safe working directory"
+        msg: "directory and email_templates_directory vars needs to be provided in order continue with the playbook"
       when:
         - directory is undefined or (directory | trim) == ""
         - email_templates_directory is undefined or (email_templates_directory | trim) == ""

@@ -1,6 +1,6 @@
 ---
 - name: Initialize Ansible Tower scheduled notification project, job template, inventory and schedules
-  hosts: tower-jobs-init
+  hosts: tower_jobs_init
   gather_facts: false
   environment:
     TOWER_HOST: "{{ ansible_tower_url }}"
@@ -39,7 +39,7 @@
           
         - name: "Create an inventory for {{ customer_engagement }}"
           tower_inventory:
-            name: "{{ customer_engagement }}-tower-jobs-init"
+            name: "{{ customer_engagement }}-tower_jobs_init"
             description: "Inventory for {{ customer_engagement }}"
             organization: "{{ organization }}"
             state: present
@@ -48,7 +48,7 @@
           tower_inventory_source:
             name: "{{ customer_engagement }}-notifications"
             description: Source for {{ customer_engagement }}-notifications
-            inventory: "{{ customer_engagement }}-tower-jobs-init"
+            inventory: "{{ customer_engagement }}-tower_jobs_init"
             source: scm
             source_project: "{{ customer_engagement }}-project"
             credential: "{{ scm_credential_name }}"
@@ -58,13 +58,13 @@
 
         - name: "Add an inventory source to initialize scheduled notifications for {{ customer_engagement }}"
           tower_inventory_source:
-            name: "{{ customer_engagement }}-tower-jobs-schedules"
+            name: "{{ customer_engagement }}-tower_jobs_schedules"
             description: Source for {{ customer_engagement }}-schedules
-            inventory: "{{ customer_engagement }}-tower-jobs-init"
+            inventory: "{{ customer_engagement }}-tower_jobs_init"
             source: scm
             source_project: "{{ customer_engagement }}-project"
             credential: "{{ scm_credential_name }}"
-            source_path: iac/inventories/tower-jobs-schedules/inventory
+            source_path: iac/inventories/tower_jobs_schedules/inventory
             update_on_launch: yes
             state: present
 
@@ -81,7 +81,7 @@
         - name: "Launch job to configure Tower for {{ customer_engagement }}"
           tower_job_launch:
             job_template: "configure-ansible-tower"
-            inventory: "{{ customer_engagement }}-tower-jobs-init"
+            inventory: "{{ customer_engagement }}-tower_jobs_init"
           register: job
           
         - name: "Print job ID details"

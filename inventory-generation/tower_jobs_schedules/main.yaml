@@ -1,6 +1,6 @@
 ---
 - name: Generate ansible-tower scheduled notification inventory based off of engagement.json
-  hosts: tower-jobs-schedules
+  hosts: tower_jobs_schedules
   gather_facts: false
   tasks:
     - name: "Fail If Working Directory Is Not Provided"
@@ -22,11 +22,11 @@
         - name: "Write inventory to file"
           template:
             src: "tower-management-host.yaml.j2"
-            dest: "{{ directory }}/iac/inventories/tower-jobs-schedules/inventory/group_vars/tower-management-host.yaml"
+            dest: "{{ directory }}/iac/inventories/tower_jobs_schedules/inventory/group_vars/tower-management-host.yaml"
 
         - name: "Create hosts file"
           copy:
             src: "hosts"
-            dest: "{{ directory }}/iac/inventories/tower-jobs-schedules/inventory/hosts"
+            dest: "{{ directory }}/iac/inventories/tower_jobs_schedules/inventory/hosts"
       when: 
         - engagement_type == 'Residency'
