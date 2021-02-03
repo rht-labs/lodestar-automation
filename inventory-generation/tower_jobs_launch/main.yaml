@@ -1,6 +1,6 @@
 ---
 - name: Initialize Ansible Tower scheduled notification project, job template, inventory and schedules
-  hosts: tower_jobs_init
+  hosts: tower_jobs_launch
   gather_facts: false
   environment:
     TOWER_HOST: "{{ ansible_tower_url }}"
@@ -48,7 +48,7 @@
           
         - name: "Create an inventory for {{ customer_engagement }}"
           tower_inventory:
-            name: "{{ customer_engagement }}-tower_jobs_init"
+            name: "{{ customer_engagement }}-tower_jobs_launch"
             description: "Inventory for {{ customer_engagement }}"
             organization: "{{ organization }}"
             state: present
@@ -57,7 +57,7 @@
           tower_inventory_source:
             name: "{{ customer_engagement }}-notifications"
             description: Source for {{ customer_engagement }}-notifications
-            inventory: "{{ customer_engagement }}-tower_jobs_init"
+            inventory: "{{ customer_engagement }}-tower_jobs_launch"
             source: scm
             source_project: "{{ customer_engagement }}-project"
             credential: "{{ scm_credential_name }}"
@@ -69,7 +69,7 @@
           tower_inventory_source:
             name: "{{ customer_engagement }}-tower_jobs_schedules"
             description: Source for {{ customer_engagement }}-schedules
-            inventory: "{{ customer_engagement }}-tower_jobs_init"
+            inventory: "{{ customer_engagement }}-tower_jobs_launch"
             source: scm
             source_project: "{{ customer_engagement }}-project"
             credential: "{{ scm_credential_name }}"
@@ -90,7 +90,7 @@
         - name: "Launch job to configure Tower for {{ customer_engagement }}"
           tower_job_launch:
             job_template: "configure-ansible-tower"
-            inventory: "{{ customer_engagement }}-tower_jobs_init"
+            inventory: "{{ customer_engagement }}-tower_jobs_launch"
           register: job
           
         - name: "Print job ID details"
