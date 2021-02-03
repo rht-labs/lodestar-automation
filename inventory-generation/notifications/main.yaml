@@ -1,6 +1,6 @@
 ---
 - name: Generate email notifications to be consumed by Ansible Tower scheduled jobs
-  hosts: notification_generation
+  hosts: notification_host
   gather_facts: false
   
   tasks:
