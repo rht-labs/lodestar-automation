@@ -33,7 +33,7 @@ ansible_tower:
         - name: "{{ customer_engagement }}-mail-host-credentials"
           description: "Email credentials for infra-ansible/mail-host"
           credential: "{{ scm_credential_name }}"
-          source_project: "rht-labs-credentials-dev"
+          source_project: "{{ mail_host_source_project }}"
           source: "scm"
           source_path: "redhat.com/inventory/hosts"
           update_on_launch: true
