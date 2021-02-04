@@ -1,0 +1,44 @@
+---
+- name: Generate email notifications to be consumed by Ansible Tower scheduled jobs
+  hosts: notification_host
+  gather_facts: false
+  
+  tasks:
+    - name: "Fail if directory and email_templates_directory are not provided"
+      fail:
+        msg: "directory and email_templates_directory vars needs to be provided in order continue with the playbook"
+      when:
+        - directory is undefined or (directory | trim) == ""
+        - email_templates_directory is undefined or (email_templates_directory | trim) == ""
+
+    - name: "Read Engagement Data"
+      include_vars:
+        file: "{{ directory }}/engagement.json"
+
+    - name: "Check for existing email templates"
+      stat:
+        path: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all"
+      register: notifications_dir
+      
+    - name: "Copy email templates from main repo to engagement repo - if the target directory does NOT already exist"
+      block:
+        - name: "Add directory for group_vars/all"
+          file:
+            path: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all"
+            state: directory
+
+        - name: "Copy email template directory to engagment repo and process as jinja2"
+          template:
+            src: "{{ item }}"
+            dest: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all/{{ item | basename | regex_replace('.j2$') }}"
+          with_fileglob:
+            - "{{ email_templates_directory }}/hosting/residency/{{ language | default('en_us') }}/*.j2"
+
+        - name: "Create hosts file"
+          copy:
+            src: "hosts"
+            dest: "{{ directory }}/iac/inventories/notifications/inventory/hosts"
+
+      when: 
+        - notifications_dir.stat.isdir is not defined
+        - engagement_type == 'Residency' 

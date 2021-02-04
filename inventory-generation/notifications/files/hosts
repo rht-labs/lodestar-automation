@@ -1,0 +1,5 @@
+[mail-host]
+localhost
+
+[mail-host:vars]
+ansible_connection=local
