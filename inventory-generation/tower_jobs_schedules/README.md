@@ -17,5 +17,6 @@ Some additional variables are required to be passed in from a private config fil
 | organization | Tower Org | y | NA |
 | scm_credential_name | Credential name for checking out repos | y | NA |
 | ansible_tower_url | Tower URL | y | NA |
+| ansible_tower_admin_username | Tower Admin Username | no | admin |
 | ansible_tower_admin_password | Tower Admin Password | y | NA |
 | mail_host_source_project | Project name for mail-host credentials | y | NA |
