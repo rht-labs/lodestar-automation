@@ -8,6 +8,7 @@ delete_missing_items: false
 
 ansible_tower:
   url: "{{ ansible_tower_url }}"
+  admin_username: "{{ ansible_tower_admin_username | default('admin') }}"
   admin_password: "{{ ansible_tower_admin_password }}"
   projects:
     - name: "{{ customer_engagement }}-project"
