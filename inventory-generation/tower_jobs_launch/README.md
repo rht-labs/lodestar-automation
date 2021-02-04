@@ -12,6 +12,6 @@ Some additional variables are required to be passed in from a private config fil
 | organization | Tower Org | y | NA |
 | ansible_tower_url | Tower URL | y | NA |
 | ansible_tower_admin_password | Tower Admin Password | y | NA |
-| ansible_tower_admin_username | Tower User Name | y | NA |
+| ansible_tower_admin_username | Tower Admin Username | n | admin |
 | scm_credential_name | Name of the existing Source Credential in Tower | y | NA |
 | ssh_key_data_path | The path to the SCM private key used to access GitLab | y | NA |
