@@ -11,18 +11,18 @@
         - directory is undefined or (directory | trim) == ""
         - email_templates_directory is undefined or (email_templates_directory | trim) == ""
 
-    - name: Read Engagement Data
+    - name: "Read Engagement Data"
       include_vars:
         file: "{{ directory }}/engagement.json"
 
-    - name: Check for existing email templates
+    - name: "Check for existing email templates"
       stat:
         path: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all"
       register: notifications_dir
       
-    - name: Copy email templates from main repo to engagement repo
+    - name: "Copy email templates from main repo to engagement repo - if the target directory does NOT already exist"
       block:
-        - name: Add directory for group_vars/all
+        - name: "Add directory for group_vars/all"
           file:
             path: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all"
             state: directory
