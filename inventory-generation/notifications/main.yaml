@@ -41,4 +41,5 @@
 
       when: 
         - notifications_dir.stat.isdir is not defined
-        - engagement_type == 'Residency' 
+        - engagement_type is defined and        
+          engagement_type == 'Residency'
