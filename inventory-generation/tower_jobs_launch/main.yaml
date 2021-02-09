@@ -98,5 +98,5 @@
             msg: "Job launched: {{ ansible_tower_url }}/#/jobs/playbook/{{ job.id }}"
           
       when:  
-        - engagement_type | default('none') == 'Residency'  
+        - engagement_type | default('') == 'Residency'  
         - (end_date | default('2006-01-02T15:04:05.000Z') | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ')).strftime('%s') > now(utc=true).strftime('%s')  
