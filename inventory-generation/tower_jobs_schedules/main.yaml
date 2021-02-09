@@ -29,7 +29,5 @@
             src: "hosts"
             dest: "{{ directory }}/iac/inventories/tower_jobs_schedules/inventory/hosts"
       when: 
-        - engagement_type is defined    
-        - engagement_type == 'Residency' 
-        - end_date is defined
-        - (end_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ')).strftime('%s') > now(utc=true).strftime('%s')
+        - engagement_type | default('none') == 'Residency'
+        - (end_date | default('2006-01-02T15:04:05.000Z') | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ')).strftime('%s') > now(utc=true).strftime('%s')
