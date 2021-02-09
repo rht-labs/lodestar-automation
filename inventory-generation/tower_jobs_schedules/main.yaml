@@ -29,5 +29,7 @@
             src: "hosts"
             dest: "{{ directory }}/iac/inventories/tower_jobs_schedules/inventory/hosts"
       when: 
-        - engagement_type is defined and
-          engagement_type == 'Residency'
+        - engagement_type is defined    
+        - engagement_type == 'Residency' 
+        - end_date is defined
+        - (end_date | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ')).strftime('%s') > now(utc=true).strftime('%s')
