@@ -15,6 +15,11 @@
       include_vars:
         file: "{{ directory }}/engagement.json"
 
+    - name: "Check for existing email templates"
+      stat:
+        path: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all"
+      register: notifications_dir
+
     - name: "Copy email templates from main repo to engagement repo - if the target directory does NOT already exist"
       block:
         - name: "Add directory for group_vars/all"
@@ -35,5 +40,7 @@
             dest: "{{ directory }}/iac/inventories/notifications/inventory/hosts"
 
       when: 
+        - notifications_dir.stat.exists is false
         - engagement_type | default('') == 'Residency'
         - (end_date | default('2006-01-02T15:04:05.000Z') | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ')).strftime('%s') > now(utc=true).strftime('%s')
+
