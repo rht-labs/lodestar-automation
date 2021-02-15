@@ -27,7 +27,7 @@
             path: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all"
             state: directory
 
-        - name: "Copy email template directory to engagment repo and process as jinja2"
+        - name: "Copy email template directory to engagement repo and process as jinja2"
           template:
             src: "{{ item }}"
             dest: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all/{{ item | basename | regex_replace('.j2$') }}"
@@ -41,6 +41,6 @@
 
       when: 
         - notifications_dir.stat.exists is false
+        - launch is defined
         - engagement_type | default('') == 'Residency'
-        - (end_date | default('2006-01-02T15:04:05.000Z') | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ')).strftime('%s') > now(utc=true).strftime('%s')
-
+        - (archive_date | default('2006-01-02T15:04:05.000Z') | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ')).strftime('%s') > now(utc=true).strftime('%s')
