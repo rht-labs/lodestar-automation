@@ -97,6 +97,8 @@
           debug:
             msg: "Job launched: {{ ansible_tower_url }}/#/jobs/playbook/{{ job.id }}"
           
-      when: 
-        - engagement_type is defined and
-          engagement_type == 'Residency' 
+      when:  
+        - start_date is defined 
+        - (hosting_environments is defined) and (hosting_environments | length > 0)
+        - engagement_type | default('') == 'Residency'
+        - (archive_date | default('2006-01-02T15:04:05.000Z') | to_datetime('%Y-%m-%dT%H:%M:%S.%fZ')).strftime('%s') > now(utc=true).strftime('%s')  

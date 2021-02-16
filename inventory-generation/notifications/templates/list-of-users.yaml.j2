@@ -1,0 +1,20 @@
+---
+
+full:
+  list_of_users:
+{% for user in engagement_users | default([]) %}
+{% filter indent(width=6, indentfirst=False) %}
+    - {{ user | to_nice_yaml }}
+{%- endfilter %}
+{%- endfor %}
+ 
+internal:
+  list_of_users:
+{% for user in engagement_users | default([]) %}
+{% filter indent(width=6, indentfirst=False) %}
+{% if 'redhat.com' in user.email %}
+    - {{ user | to_nice_yaml }}
+{% endif %}
+{%- endfilter %}
+{%- endfor %}
+
