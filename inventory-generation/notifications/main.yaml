@@ -48,7 +48,7 @@
         
     - name: "Process list of users from template"
       template:
-        src: list_of_users.yaml.j2
+        src: list-of-users.yaml.j2
         dest: "{{ directory }}/iac/inventories/notifications/inventory/group_vars/all/list_of_users.yaml"
       when: 
         - start_date is defined
