@@ -29,7 +29,7 @@
           tower_credential:
             name: "{{ scm_credential_name }}"
             organization: "{{ organization }}"
-            credential_type: Source Control
+            kind: scm
             state: present
             inputs:
               ssh_key_data: "{{ lookup('file', ssh_key_data_path) }}"
