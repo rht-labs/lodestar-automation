@@ -30,9 +30,8 @@
             name: "{{ scm_credential_name }}"
             organization: "{{ organization }}"
             kind: scm
+            ssh_key_data: "{{ lookup('file', ssh_key_data_path) }}"
             state: present
-            inputs:
-              ssh_key_data: "{{ lookup('file', ssh_key_data_path) }}"
 
         - name: "Create the {{ customer_engagement }}-project"
           tower_project:    
